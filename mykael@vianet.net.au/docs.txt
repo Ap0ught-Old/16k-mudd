@@ -1,0 +1,353 @@
+
+			Medusas Garden
+
+			  A mini-mud
+
+Implementation
+
+	Java 1.2.2
+
+	package mm
+
+	Raw
+		MM.java			 2,617 Bytes
+		MObj.java		24,396 Bytes
+					------------
+		Total			27,007 Bytes
+
+	Squished
+		MM.java.squish		 1,778 Bytes
+		MObj.java.squish	14,579 Bytes
+					------------
+		Total			16,357 Bytes
+
+		Target			16,384 Bytes
+					------------
+		Gap			    27 Bytes
+
+	Classes
+
+		mm.MM.class		 2,787 Bytes
+		mm.MObj.class		 9,894 Bytes
+		mm.Msg.class		 2,483 Bytes
+		mm.Cmd.class		   987 Bytes
+		mm.Cmd_Look.class	 2,336 Bytes
+		mm.Cmd_Say.class	   627 Bytes
+		mm.Cmd_Emote.class	   527 Bytes
+		mm.Cmd_Gossip.class	   644 Bytes
+		mm.Cmd_Tell.class	 1,024 Bytes  
+		mm.Cmd_Go.class	 	 1,144 Bytes
+		mm.Cmd_Link.class	 1,371 Bytes
+		mm.Cmd_Unlink.class	   531 Bytes
+		mm.Cmd_Zap.class	   626 Bytes
+		mm.Cmd_Get.class	   894 Bytes
+		mm.Cmd_Put.class	   777 Bytes
+		mm.Cmd_Soul.class	   305 Bytes
+					------------
+					26,957 Bytes
+
+Compilation
+
+	Create a directory called 'mm' in a directory in your
+	CLASSPATH.
+
+	Unpack the two .java files into it.
+
+	Issue:
+
+		Javac MM.java
+
+Execution
+
+	To start the mud, issue:
+
+		java mm.MM
+
+	It will listen on port 9876.  The port number is hard coded
+	into MM.java.  If you want to change it you must recompile.
+
+	Connect with a normal telnet client.
+	
+	Enter your name
+
+	Play
+
+
+Commands
+
+	All commands are case sensative, as are all object names.  Object
+	names will be upper cased if they appear at the beginning of a
+	message.
+
+	look
+
+		This shows you your current location, what else is there
+		and what the exits are.
+
+	look person
+
+		This makes you look at the person.  If they are
+		disconnected, they appear as a statue.  You see what
+		they are carrying.
+
+	look object
+
+		This makes you look at the object.  You see what it
+		contains.
+
+	look direction
+
+		This tells you the name of the room that is in that
+		direction.
+
+	say words
+
+		Your avatar will say the words and they will be heard
+		by everyone in the same room.
+
+		You may use 'words as an abbreviation.
+
+	tell player words
+
+		Your words will be sent directly to the other player.
+
+	gossip words
+
+		Your avatar will be sent directly to all players on 
+		the mud.
+
+		You may use .words as an abbreviation.
+
+	emote action
+
+		Your avatar will perform the indicated (non functional)
+		action.  This will be visible to everyone in the same
+		room.
+
+		You may use ,action as an abbreviation.
+
+	soul name msg_actor/msg_observer/msg_victim/msg_item
+
+		This defines a new soul action.  You can execute it
+		by entering its name and the names of the concerned
+		objects (or people).  Soul definitions are saved
+		along with the rest of the mud.
+
+		In the messages you can use some tokens:
+
+			@a0	The actors name
+			@v0	The victims name
+			@i0	The objects name
+			@o0	The observers name
+
+		Some examples:
+
+		  >soul grin You grin like a cheshire cat!/@a0 has
+		   a silly grin on his face!
+		  >grin
+		  You grin like a cheshire cat!
+		 (Mykael has a silly grin on his face!)
+
+		  >soul grin@ You grin knowlingly at @v0!/@a0 grins
+		   knowingly at @v0!/@a0 is grinning at you! I wonder
+		   why?
+		  >grin@ sally
+		  You grin knowingly at sally!
+		 (Mykael grins knowingly at sally!)
+		 (Mykael is grinning at you! I wonder why?)
+
+		  >soul hit# You hit @v0 with @i0!/@a0 hits @v0 with
+		   @i0!/@a0hits you with @i0!/@a0 picks you up and
+		   hits @v0 with you!
+		  >hit# sally dave
+		  You hit sally with dave!
+		 (Mykael hit salley with dave!)
+		 (Mykael hits you with dave!)
+		 (Mykael picks you up and hits sally with you!)
+
+		A suggested convention is that soul commands which
+		have a single victim end with an @ and those that
+		have a victim and an object end with a #.
+
+		Although you can overwrite soul definitions they
+		cannot be erased.  You can also not define a soul
+		that is the same as a command.
+
+	go exit
+
+		This moves you through the indicated exit.
+		Exits may have arbitary names, but single commands
+		are provided for:
+
+			north, south, east, west, up, down
+
+		These can be entered without the preceeding 'go'.
+
+	go room
+
+		As long as room is not the name of a current exit this
+		will teleport you directly to the room.
+
+		This will actually work with any object (including
+		other players).  You may not go into yourself though.
+
+	go out
+		If you are in a room that is inside another room this
+		will move you into the outer room (like getting out
+		of a sack or a chest).  You can use 'go object' to
+		get into an object.
+
+	get object
+
+		This moves an object from your location into your
+		inventory.  You may not get rooms.  Getting yourself
+		is not a good idea.
+
+	put object
+
+		This puts an object from your inventory into your
+		current room.  If you are (somehow) in the void, an
+		object that is put will be destroyed (like zap).
+
+	quit
+
+		This causes you to disconnect from your Avatar and closes
+		your telnet session.  The avatar remains in the game and
+		appears to be a statue.  You may reconnect to it by 
+		starting a session and entering its name.  Note that, as
+		there is no security, anyone else can also reconnect to
+		your avatar.
+
+		Your (disconnected) avatar will be saved when the mud
+		is saved.
+
+	shutdown
+
+		This disconnects all players, saves the mud and then
+		terminates the main program.
+
+		When the mud is restarted it will load the 'medusa.save'
+		file and resume from the state it was in when it was
+		shutdown (all players will be statues though, as their
+		telnet sessions have dropped).
+
+	save
+
+		This causes the current stae of the mud to be saved to 
+		the 'medusa.save' file.  it is automatically invoked if
+		the shutdown command is used to stop the mud.
+
+	link direction destination
+
+		This creates an exit from your current room to the 
+		destination room.  This is a one directional link.  For a
+		two directional link you must go into the other room and
+		link it back to this one.
+
+		Direct movement commands are available for:
+
+			north, south, east, west, up, down, out
+
+		To move through any other exit, you must 'go exit_name'.
+
+		The 'out' exit appears automatically.  If you explicitly
+		define an out exit, it will override the automatic exit.
+
+	link . object
+
+		This will create an object and put it into your current
+		location.
+
+	unlink direction
+
+		This removes the named exit from the room.
+
+		Unlink only works on explicit exits.  It will not affect
+		the automatic 'out' exit, objects or other players.
+		Use 'zap' to get rid of these.
+
+		If all exits to a room are unlinked, the room will not
+		be destroyed.  Use 'zap' to destroy a room.
+
+	zap object
+
+		This removes the named object (be it a room or another
+		player).  If a player is zapped, they will be disconnected
+		before thier avatar is deleted.
+
+		You may not zap the objets 'world', 'Medusas Garden' and
+		yourself.
+
+		If you zap a room that has a connected player in it, they
+		get destroyed and kicked out of the mud.
+
+
+OLC
+
+	You can use the link and unlink commands to extend the virtual
+	world within the mud.  When the mud is saved, the state of all
+	rooms, all players and the soul is written to the 'medusa.save'
+	file.
+
+	When the mud boots, it looks for the 'medusa.save' file and
+	tries to load it.  If successful, the mud starts from its
+	previous state.
+
+	To reset the mud, stop it, erase the 'medusa.save' file and
+	restart it.  As it will be unable to find the file it will
+	automatically create the default starting room.  For this reason
+	the 'medusa.save' file is not considered to be a part of the
+	mud itself.
+
+	If you change the MObj class, the mud will be unable to load 
+	any old 'medusa.save' files.  This is due to the limitations of
+	Java object serialization (and it throws a rather messy
+	exception).
+
+	To stop the mud without changing the 'medusa.save' file, either
+	use CTRL-C to crash it or take a copy of the file and let it
+	stop normally (overwritting the 'medusa.save' file).
+
+	The file contains a stream of serialized Java objects.
+
+
+Copyright
+
+	Michael Clarke, April 2nd, 2000
+
+	Distributed under the GPL license.
+
+	You may not charge for this code or any product which is built
+	upon it or derived from it.
+
+	This code contains several small fragments which are taken
+	from examples in Suns Java documentation.
+
+
+Comments
+
+	This was a strange programming exercise.  Normally the size of
+	the source code is one of the last things that I worry about.
+	It's a cheap trade for better performance or maintainability.
+	In this case, the goal was to write a feature stuffed mud
+	in under 16k.  With Java that is only just enough to get the
+	basic framework in place and add a few little commands.
+
+	The design also goes against a lot of the OO design principles
+	that I have heard.  Rather than subclassing to achieve
+	differentiation, it does it all with one monoloithic object
+	class (MObj).  Both players and rooms are instances of it
+	(yes, players can have exits, although I've stopped you
+	from logging in as a room).  This gives a surprising degree
+	of flexability.
+
+	The major peformance degredation as size increases will be in
+	the efficency of searching the 'things' HashMap.  This 
+	collection contains every object in the mud - players, rooms
+	and everything else.  It is what gets serialized into the 
+	'medusa.save' file.
+
+	The gvim command 'set ff=unix' is good.  It freed up over 900
+	bytes by changing the line termination from /n/r to just /n.
+	Due to Javas unix heritage it is more than happy to process
+	source files in unix format.

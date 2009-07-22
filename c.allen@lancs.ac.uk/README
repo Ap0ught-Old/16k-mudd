@@ -1,0 +1,23 @@
+RUNNING
+=======
+
+Crappotalk will work with tcl 8.0 and 8.2.  To run it, edit the 'startup'
+script, replacing tclsh8.0 with the name (and if necessary path) of your
+tclsh interpreter.  Then:
+
+  ./startup
+
+Logs will be kept in log/log-date.
+
+If you want to edit the mantras, questions or starting nouns, edit the files
+mantra, noun and questions.
+
+User files are stored in users/Name, passwords are unencrypted.  For more
+detailed user documentation, see the file user.ps.
+
+Crappotalk's homepage is at:  http://penguin.lancs.ac.uk/crappotalk/ and it
+should be running at penguin.lancs.ac.uk port 1234 (provided someone hasn't
+rebooted the machine while I'm away or run the shutdown command as Zoia).
+
+The file 'doc/output' contains the results of running the 16k.py script on
+the talker's source and data files.

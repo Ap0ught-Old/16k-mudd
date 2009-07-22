@@ -1,0 +1,20 @@
+get|take <what>
+drop|throw <what>
+give <what> <who>
+look|read <what>
+examine <what>		you must own <what>
+inventory
+
+say [who] <message>
+
+attack <who>
+wear <what>		wear a set of armor(or other item)
+wield <what>		use a given weapon
+
+go|goto|move <where>
+exit			leave a room
+
+help|? [command]
+
+quit
+

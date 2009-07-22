@@ -1,0 +1,170 @@
+Serenity implements a simple event system. It does this because event based muds are cool
+and trendy.
+
+I debated whether to try to include any kind of event based system at all, before I started
+coding anything. "Python is pretty slow already, relatively speaking," I thought to myself.
+Soon after this I thought "What the hell," and did it anyway, without really having any
+clue as to how to go about it.
+
+So, anyway, here are the docs.
+
+-----
+An Explanation of the Event System
+or
+How this $#!+ works.
+
+The event system is wrapped up in the evt.py module. It's really pretty short and simple,
+and lacks a couple features that probably need to be implemented -- for example local
+event queues for objects. It also, currently, is pretty dumb about whether an object exists
+gamewise -- and by pretty dumb, I mean it doesn't care at all. There are currently no
+mechanisms for dealing with, say, the case where a monster that has posted a heal event
+is killed. Searching for all event related to a monster and removing them would be rather
+slow. These issues can probably be fixed up with smart implementation of event handlers and
+some sort of local, per object event queue, but this has not yet been done. Also, no
+mechanism exists for saving events related to an object. Again, local queues are probably
+going to be the start of the solution for this.
+
+That said, it's fairly functional as is. Any class can receive events by defining
+hEvt_<type> where type is the type of event; hEvt_look, etc. The event handler should
+return 1, unless it wants to stop further processing of the event. Then it should return
+0, and ALL further processing of that event ceases. Right then. The event is dead. The
+event handler should also pass the event along to any "children" of the object using 
+the pass_evt(event,obj) method. It is not automatically passed along for several reasons.
+One, so that the event handler can decide whether it wants to stop all processing of the
+event, or send it to all children, or just some of them. Two, because the event system
+need not only be used by ingame objects and thus relying on the inv[] variable being
+present is unacceptable. Also, inv may not contain all children; some items might be
+equipped on a player for example.
+
+To post events, the class must inherit from EvtUsr. The base in-game Object class (see
+obj.py) inherits from EvtUsr, and all in-game objects should inherit from Object. To do
+the actual posting, use the p_evt method. You should never call the event handlers directly.
+
+You can also intercept events intended for one object with another object. To see how this
+is useful, take the case of a blindfold. Obviously, a blindfold should prevent one from
+seeing. Thus, it needs to get at the "look" event and stop it from happening, and probably
+send some sort of "you can't see" message to the player. But, look events get posted to the
+location the object is in, and by the time they make it down to the blindfold, all the
+looking may well have been done. What to do? The best solution to this seemed to be a system
+whereby objects can intercept outgoing or incoming events coming for or intended for
+another object. The ntrcpt_in(obj o, string type, func m) and _out methods allow for this.
+Use the stop_ntrcpt_in and _out methods with the same parameters you used for ntrcpt_in/_out
+in order to stop intercepting the events.
+
+Finally, there are global events, and with them the last event related method you may want
+to use: rcv_glbls(string type). Global events are events that are not directed towards
+any one object, but instead have a target of None. Such events will be sent to every
+object that has signed up to receive them using the rcv_glbls method. The Srv class
+(comm.py) makes use of this -- the code for shutting down the mud is present in the class,
+and it looks for a g_shutdown global event to set it off.
+
+Thanks to all of the above we can make a neat diagram of the event pipeline
+
+Event Posted   Global event receiver
+|                      |
++------------- Global Events - Global event receiver
+|
+Outgoing interceptors
+|
+Incoming interceptors
+|
+Event handler on target
+
+Events are passed using tuples. I figured using a class, while it would be nicer, 
+would just slow things down even more. Your basic event tuple looks like this :
+
+( int time (0 for immediately), string event type, obj originator, obj target,
+  anytype parameter(s) )
+
+Time -- obvious. The number of ticks before the event goes off, 0 is ok, and immediately
+	sends the event to the target. Note that all events are still posted through
+	p_evt. I debated this one for a while and eventually came to the conclusion that
+	it would be simpler for now just to do everything through p_evt.
+Event type -- a string that tells us what type of event this is.
+Originator -- the object that posted the event.
+Target     -- the object this event is getting sent to.
+Parameters -- Event specific parameters.
+	      This should be a tuple whenever there are multiple parameters to the event.
+	      If there is only a single parameter, it does not need to become a tuple,
+	      though it certainly may be made one if desired. This is not technically a
+	      hard and fast rule, but I prefer this way in case the basic event tuple needs
+	      to be expanded in the future.
+
+One final thing to make note of -- the default event handlers in the Object class pass the
+event on to the inventory of the object. This is usually exactly what you want to happen,
+but you will want to rewrite it if you don't want to pass the event on to everything in
+your inventory for one reason or another.
+
+-----------
+List of currently implemented events
+
+Naming conventions:
+All global events begin with g_
+All local events, events specific to one object, begin with l_, see comm.py l_real_shutdown
+Everything else has no prefix.
+
+Now, the currently defined events:
+
+Global Events
+
+Events with a target of None get special treatment. They are considered global events and
+do not get directed to any one object, but instead go to any objects that have asked to
+receive the event. How to do this is described above (rcv_glbls). 
+
+Event: g_shutdown
+Params: int time
+
+	Shut down the mud in time ticks.
+	The only receiver for this right now is the Srv class (comm.py).
+
+Event: g_msg
+Params: string text
+
+	Sends "text" to everyone connected to the MUD.
+
+	The only receiver for this right now is the Srv class (comm.py).
+
+Regular Events
+
+Event: look
+Parameters: tuple ( obj look_targ, string "at"/"in" )
+
+	The look event is sent whenever someone looks at or in something. Looking around
+	one's current location is considering looking "inside" an object. The first member
+	of the tuple will be the object being looked at, and the second will either be "at"
+	or "in". The meaning of this should be obvious.
+
+Event: quit
+Parameters: None
+
+	Sent when a player quits the game. There is a silght problem in that the character
+	may get removed from the room before other player objects see the event, thus
+	checking e[2]==self.loc is not a reliable indicator of whether the quitter is in
+	the same room as the player receiving the event. Use e[3] (the target) instead,
+	as that should always be equal to the room the quitter was in.
+
+Event: move_leave
+Parameters: obj location
+
+	Location should be set to the room the player/creature is moving to. It is sent
+	when the player moves to the room they are leaving.
+
+Event: move_enter
+Parameters: obj location
+
+	Location should be set to the room the player/creature is coming from. It should be
+	sent from the leave event to the room the player is entering. See Object in obj.py
+	for examples.
+
+Event: speech
+Parameters: tuple (obj speech_targ, string text)
+
+	Speech events should be sent to the room the player is in. The target of the speech
+	is who the speech is actually for. The reason this is done is so you can catch
+	"whispers" in the room and, for example, prevent them from happening (for a totally
+	silent room) or have the teacher attack you or the priest yell at you or whatever.
+	The message should be considered private if the speech_targ is a character.
+	Speech_targ should be None if the speech is not directed at anyone in particular.
+	Thus, the speech event functions as a "say" if speech_targ is None and as a
+	"whisper" if it is set. Tells, which are not yet implemented, will be a seperate
+	event.

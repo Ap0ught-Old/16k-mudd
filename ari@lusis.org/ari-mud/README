@@ -1,0 +1,43 @@
+Usage:
+./mud [<port>]
+
+If no port is specified, 4201 will be used.
+
+When you connect, you will be given two choices. 'cn' connects you to an
+existing player, while 'cr' creates one and connects you to it.  You may
+connect to any player only one time concurrently.  After you connect,
+you are presented with the description of your location.  Several commands
+are available to every player:
+who	Gives list of online players
+look	Shows description of current location
+go <e>	Goes in the direction of a certain exit, whose entire name must be given
+say <t>	Speaks the given text to the players in your location
+pose <t>	Poses the given text to the players in your location
+hit <p>	Hits the selected player and displays how much damage you did
+stat	Displays your hit points.
+
+Several other commands are only available to wizards.  The only player that
+is created by the program at runtime is 'God' (password 'Ari'), who is a
+wizard that can be used to expand the MUD or maintain it while it is running.
+wiz <p>	Give wizard privelages to the selected player
+dewiz <p>	Revoke wizard privelages
+ann <t>	Announces the text to the entire MUD
+heal <p>	Heals the player to 100 hit points.
+kill <p>	Kills the player
+dig <r>	Creates a new room, linked to your present location
+desc <t>	Gives the current location the description you want
+nuke	Destroys the current room and moves all players in it to the home room
+tel <r>	Teleports to a selected room
+
+
+Several sample rooms are included with the program, and these are created
+automatically at runtime.  Players will start on the outskirts of a small
+town.
+
+
+
+
+This code is licensed under the GNU GPL, and is Copyright (C) 2000 by
+Ari Johnson, who may be reached by e-mail at ari@lusis.org.
+The GNU GPL is included with this program as the file 'COPYING'.
+

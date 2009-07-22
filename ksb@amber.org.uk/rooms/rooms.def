@@ -1,0 +1,197 @@
+1
+%
+Main Hall
+%
+The ceilling of this entrance hall is high above and everything has been 
+designed to inspire wonder.  The floor is scuffed from the footsteps of many 
+wanderers.
+%
+02
+214
+315
+611
+89
+%
+2
+%
+Bar
+%
+Refuge for all weary travellers! The floor is sticky from the dried spillages, 
+and despite the no smoking signs there is a heaviness to the air made more 
+oppressive by the lack of windows.
+%
+21
+33
+%
+3
+%
+Games Room
+%
+Not a quiet escape from the bar in any sense.  Beeps and flashing lights 
+surround you.  Why do people throw their money into these things?
+%
+12
+%
+5
+%
+Walk-in Wardrobe
+%
+The clothes store of a serious shop-a-holic.  There are enough dresses, tops 
+and trousers here to clothe a nation.  And as for shoes, well there is a 
+battered pair of Doc Martin boots, but the rest look unworn.
+%
+26
+%
+6
+%
+Bedroom
+%
+Mind where you step - this place is a mess.  Clothes lie all over the floor 
+and the bed looks like it is about to disintegrate.  A green fluffy rabbit
+sits on the dresser and doesn't fit with the rest of the feel of the room.
+%
+05
+29
+%
+8
+%
+Attic
+%
+Creaky stairs lead up to this dusty space.  Piles of forgotten books and toys 
+are scattered around covered in cobwebs. A place of memories.
+%
+99
+%
+9
+%
+Upstairs
+%
+A sweeping staircase leads up from the hall and into the privacy of the 
+personal rooms. 
+%
+06
+610
+88
+91
+%
+10
+%
+Balcony
+%
+This grandiose piece of architecture hangs directly over the ornamental 
+gardens. It is easy to see how people fantasise about climbing up to sneak 
+that last kiss from their beloved. 
+%
+59
+911
+%
+11
+%
+Gardens
+%
+Any gardener would be proud to have designed this spectacular show of colour 
+and scent.  The exquisite perfume of the roses almost coompletely covers the
+stench of the fertiliser.
+%
+212
+51
+%
+12
+%
+Lake
+%
+A shimmering mass of muddy green water lies ahead. There are a few possible 
+paths around the edge, but you will have to tread carefully.
+%
+011
+313
+720
+%
+13
+%
+Stepping Stones
+%
+Tread carefully! One missed footing and you could end up in the lake.  There 
+is no way of knowing how deep the water is here.
+%
+014
+112
+%
+14
+%
+Kitchen
+%
+Pots and pans overflow the sink and are stacked high on the floor.  The 
+washing up is obviously not a high priority or else this has been one hell
+of a special meal...
+%
+01
+213
+515
+%
+15
+%
+Driveway
+%
+The outside of the main house is covered in ivy and looks as if it might fall  
+down at any point. A small fountain trickles ineffectively on the lawn.
+%
+11
+216
+614
+718
+%
+16
+%
+Garage
+%
+Not used for housing a car, but rather all the junk that couldn't be stuffed 
+into the attic, and this is the reaally grotty stuff. Oil and paint lies on 
+the floor in puddles.
+%
+015
+%
+18
+%
+Wood
+%
+The trees are close around you and the ground is damp.  The sunlight is 
+mostly obscured by the canopy and it is easy to become disoriented.
+%
+415
+119
+220
+619
+%
+19
+%
+Wood
+%
+The trees are close around you and the ground is damp. The sunlight is 
+mostly obscured by the canopy and it is easy to become disoriented.
+%
+318
+018
+620
+%
+20
+%
+Wood
+%
+The trees are close around you and the ground is damp. The sunlight is 
+mostly obscured by the canopy and it is easy to become disoriented.
+%
+112
+519
+%
+#end
+roomnum
+%
+roomnamae
+%
+desc
+%
+exits
+%
+
+n=0 e=1 s=2 w=3 ne=4 nw=5 se=6 sw=7 up=8 d=9

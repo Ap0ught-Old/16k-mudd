@@ -1,0 +1,69 @@
+This file is to help new coders that want to make a mud from this base.
+
+
+NO NULL?!
+---------
+No, use 0, not NULL.
+
+
+Do you plan to release updated versions of this base?
+-----------------------------------------------------
+Hopefully yes, I am working off this base in making a mud of my own.
+As things start to flesh out into a more firm base structure that can
+be worked upon, I want to release it to the public.  I get sidetracked
+a lot, though, so don't expect anything :)
+
+
+What should I do now?
+---------------------
+1) Make mobs and players.  I'm using this base for another mud I'm making,
+and I created mob.c.  Put a pointer to a mob/player in the socket structure.
+Then in the NANNY function you will need to create a player for each
+connected socket.  The player should have the name, not the socket ;-)
+Create a linked list for mobs and players, this should be easy to do,
+just look at what I did with sockets.  Look in macros.h and check out
+the linked list macros I created.. AddToList, RemoveFromList, and most
+importantly, NewObject.  These are used in the code as well.  Personally,
+I am having mobs and players use the same structure, so I only have a
+"mob" list which includes players...
+
+The basic pfile structure is there.  You should be able to work off it
+easily.  
+
+2) After someone can connect with a "real" character, you should
+start on making rooms, a world they can walk around in.  You can use
+a linked list of rooms like most muds, or go with a simple two
+dimensional array which is getting more popular; for things like wilderness.
+You'll need to develop room reading and writing, you don't want your
+areas hardcoded ;-)  But again, the basic input/output system is there,
+use it or modify off of it!
+
+3) After players can walk around the world, create objects.  Objects they
+can pick up, drop, give to someone else, etc.  You need to start thinking
+of your combat or spell system, because the way people will "wear" objects
+is important in relation to these.  Do you want limb combat?  Maybe each
+limb can wear 1 or more pieces of clothing, etc.  this is the time to add
+doors, fountains, houses, etc....
+
+4) After objects are in place, players can walk around, get objects, look
+at objects, etc..  Now you need to start creating your mud!  Combat system,
+spell system, classes, races, more complex manipulation of the world, etc.
+
+5) I've never gotten this far when creating a mud from scratch :P  But now
+is probably the time to create immortals/wizards with powers to manipulate
+the world, flesh things out, start beta testing and building....
+
+6) Be creative, I just described making your basic run-of-the-mill mud.  
+There are many unexplored areas and ideas.  Think of a fantasy world you
+want to live in, and create it.
+
+http://www.mudconnect.com
+Register, and go check out the boards.  Post your questions :)
+
+
+How can I contact you?
+----------------------
+borlak@home.com
+If it's a question related to coding, I suggest asking on mud connector 
+first, you will get many more (and possibly better) answers than I can give :)
+

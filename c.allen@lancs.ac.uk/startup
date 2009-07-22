@@ -1,0 +1,13 @@
+#!/bin/csh
+
+#############################################################################
+# Replace tclsh with the name of your tcl interpreter.  If it is not in     #
+# your path, you will need to provide the full path to the interpreter.     #
+#############################################################################
+
+set TCLSH=tclsh8.0
+touch reboot
+
+while ( -e "reboot" )
+  $TCLSH ./server.tcl > log/log.`date +%b-%d-%H:%M:%S`
+end

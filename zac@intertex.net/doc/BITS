@@ -1,0 +1,79 @@
+OBJECT BITS (X) (weapons/armor use flags 16-23, rooms use flags 24-31)
+------------------------------------------------------------------------
+ 0 Lite                             16 AttrA (Hold: Hold   Arm: Unused)
+ 1 Equip                            17 AttrB (Hold: Parry  Arm: Unused)
+ 2 Invis                            18 AttrC (Hold: AltDam Arm: Unused)
+ 3 NoGet                            19 Fac1
+ 4 NoPut                            20 Fac2
+ 5 NoDrop                           21 Fac3
+ 6 NoGive                           22 Fac4
+ 7                                  23 Fac5
+ 8                                  24 Wizard
+ 9                                  25 Safe
+10                                  26 Quiet
+11                                  27 Dark
+12                                  28 Outdoors
+13                                  29 
+14                                  30 
+15                                  31 UNUSED
+
+
+EQUIP BITS (U) (hit locations are determined by 3d9-3)
+------------------------------------------------------------------------
+ 0 Neck                             16 Groin
+ 1 Head                             17 Left Arm
+ 2 Head                             18 Left Arm
+ 3 Right Foot                       19 Left Leg
+ 4 Right Hand                       20 Left Hand
+ 5 Right Leg                        21 Left Foot
+ 6 Right Arm                        22 Head
+ 7 Right Arm                        23 Head
+ 8 Groin                            24 Back
+ 9 Right Torso                      25 Primary Hand
+10 Right Torso                      26 Secondary Hand
+11 Center Torso                     27 Readable
+12 Center Torso                     28 Usable
+13 Center Torso                     29 Quaffable
+14 Left Torso                       30 Lightable
+15 Left Torso                       31 UNUSED
+
+
+LIVING BITS (Y) (combat uses flags 24-31)
+------------------------------------------------------------------------
+ 0 Player                           16
+ 1 Aggro                            17
+ 2                                  18
+ 3                                  19
+ 4                                  20
+ 5                                  21
+ 6                                  22
+ 7                                  23
+ 8                                  24
+ 9                                  25
+10                                  26
+11                                  27
+12                                  28
+13                                  29
+14                                  30
+15                                  31 UNUSED
+
+
+PLAYER BITS (Z)
+------------------------------------------------------------------------
+ 0 Wizard                           16
+ 1                                  17
+ 2                                  18
+ 3                                  19
+ 4                                  20
+ 5                                  21
+ 6                                  22
+ 7                                  23
+ 8                                  24
+ 9                                  25
+10                                  26
+11                                  27
+12                                  28
+13                                  29
+14                                  30
+15                                  31 UNUSED
+

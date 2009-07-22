@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+# dumb guard, hits anyone who trys to start a fight
+require "../../lsmud.pl";
+
+open (msg, "+<.msg");
+while ($msg = <msg>)
+{ if ($msg =~ /hits/)
+  { &attack(split(' hits', $msg) ); }
+}

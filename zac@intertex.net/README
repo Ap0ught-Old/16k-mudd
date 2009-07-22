@@ -1,0 +1,79 @@
+Fresnel is designed to run under Python 1.5.2 and its standard
+module library.
+
+Due to limited time to work on it, Fresnel is horridly
+incomplete. I submit it to the competition only in the hopes
+that other people might find it or the ideas therein useful.
+It does come in under the 16k limit, but only barely. Sizes
+of code and data files are (according to '16k.py'):
+
+  fresnel.py       686  (main loop)
+  fb.py            787  (contains 'base data')
+  fc.py           6762  (contains classes)
+  ff.py           3459  (contains general functions)
+  fx.py           1614  (contains command implementation)
+  ----------    ------
+  TOTAL CODE     13308
+
+  lib/res         1432  (contains game resources)
+  lib/room        1015  (contains all rooms and objects)
+  lib/cmds         542  (contains command definitions)
+  lib/passwd        81  (contains md5 password hashes)
+  ----------    ------
+  TOTAL DATA      3070
+
+  ----------    ------
+  TOTAL          16378
+
+
+There are two pre-created characters in Fresnel. Both have the
+password 'admin'. The characters are 'admin', a wizard, and
+'test', a player character.
+
+Some documentation (much of it for unimplemented commands and
+ideas) can be found in the 'doc' subdirectory.
+
+CODE NOTES
+  I've tried to maintain a commonality of variable names in
+  the code. A list of what's what can be found in the comments
+  at the top of 'fc.py'. Still, this is probably some of the
+  ugliest Python ever written.
+
+  A flush should probably be added before the player is quit
+  to make sure any remaining output is seen.
+
+  Many of the systems are not at all optimized. The mud would
+  probably become very slow in the presence of any significant
+  number of players. Especially the save system, which is just
+  a dump of all rooms in the mud to disk.
+
+  There needs to be better handling of 'link-dead'. Right now,
+  it just force-quits the old login and logs back in.
+
+  Most strings in the mud are stored in 'text resources', which
+  start with a T in the resource list. Because the resource file
+  is crunched, this saves some space.
+
+  The 'eng' English conjugator and the 'X' command parser could
+  use a lot of work. They are pale shadows of real parsing and
+  grammar systems such as Infocom's.
+
+  You can't actually manipulate objects yet. Especially, heaps
+  need a lot of work to become real.
+
+  Wrapping. Definitely need string wrapping. Right now, it's all
+  done on the client or in the strings themselves.
+
+  The mud runs fine at about 20 cycles per second on FreeBSD-3.4
+  on a WinChip/200. The default delivered is 8 cycles per second.
+
+  The 'ff.py' file is very ugly, especially with the 'from x import'
+  stuff, because 'ff' is itself imported that way in other files.
+  This means lots of juicy namespace pollution. It also propagates
+  the 'string' abbreviations and some modules around.
+
+  So basically, this is just a talker for wizards, since the 'go'
+  command doesn't work yet. Constructing rooms and objects and
+  editing resources with the 'ex' command is possible but ugly. To
+  affect someone in an 'ex', the easiest way is probably to use the
+  fb.users global user array to grab their user object.

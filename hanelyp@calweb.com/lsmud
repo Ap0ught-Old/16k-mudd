@@ -1,0 +1,659 @@
+#!/usr/bin/perl
+# lsmud
+# lsmud v0.95
+
+use POSIX;
+use IO::Select;
+$HOME = $ENV{'PWD'};
+
+$admin='hanelyp@calweb.com';
+
+$SIG{'SIGPIPE'} = sub{&logout; die};
+
+$n = "\r\n";
+
+END
+{ &logout; }
+
+#############
+# variables #
+#############
+
+# $pname	characters name
+# stats		file handle accessing stats
+
+
+sub incoming_msg
+{ if ($msg = <MSG>)
+  { #print;
+    @msg = split(' ',$msg,2);
+    if ($msg[0] eq 'die')
+    { $| = 1;
+      $jnk = <>;
+      $ppid = getppid();
+      kill ($ppid);
+      die ("you have been closed by admin $msg[1]");
+    }
+    else
+    { print "$msg$n";}
+    1;
+  } 
+}
+
+sub incoming_command
+{ seek (selff, 0, 0);
+  %mystats = read_stats(*selff);
+
+# check for damage
+  ($b,$d) = split ('-',$mystats{'con'});
+  if ($d<$b)
+  { $d++;
+    $mystats{'con'} = "$b-$d";
+    seek (selff, 0, 0);    
+    &write_stats(*selff, \%mystats);
+  }
+  if ($d<1)
+  { print "Rest in peace$n$n$n";
+    exit;
+  }
+ $c = <>;
+# print $c;
+ if ($c eq "\x7f") {chop ($cl)}
+ else {$cl .= $c}
+
+ ($cl =~ /\r/) || return;
+ # rip out any control chars
+ $cl =~ s/[^\w ]//g;
+
+ if($cl) 
+ {
+  ($cmd, $p1, $p2, $p3) = split (/\s/,$cl,4);
+
+  @cl = ($p1,$p2,$p3);
+# valid command?
+  ($cmd1, $param) = &resolve_cmd($cmd, $p1);
+  if ($cmd1)
+  { print $n;
+    if ($param)
+    { unshift @cl, $param; }
+    eval (&$cmd1 (@cl) );
+  }
+  else
+  { print ("I can't $cl$n");
+  }
+  if ($cl) {print ">"}
+  $cl = '';
+ } # check for input
+}
+# dmcmd.pl
+# player commands for dirmud V 0.9
+
+# command aliases, article detection
+%cmd_alias = ("get"=>\&get, "take"=>\&get,
+	"drop"=>\&drop, "throw"=>\&drop,
+	"give"=>\&give,
+	"look"=>\&look, "read"=>\&look,
+	"examine"=>\&examine,
+	"inventory"=>\&inventory,
+	"say"=>\&say,
+	"attack"=>\&attack,
+	"wear"=>\&wear,
+	"wield"=>\&wield,
+	"go"=>\&go, "goto"=>\&go, "move"=>\&go,
+	"exit"=>\&exit,
+	"help"=>\&help, "?"=>\&help,
+	"quit"=>\&quit, "logout"=>\&quit);
+
+############
+# commands #
+############
+
+sub get
+{ ($i) = @_;
+#  $ret, $whr;
+#  local *what;
+  { ($i,$whr) = &resolve_obj($i, '../');
+    $ret = &move ($i, '../', './');
+    case:
+    { (($ret==0) && ( print ("$i gotten$n"), last case ));
+      (($ret==1) && ( print ("$i is too big for you to get$n"), last case));
+      (($ret==2) && ( print ("what $i?$n"), last case));
+      print ("internal error, get$n");
+    }
+  } # each object
+}
+
+######################
+
+sub drop
+{ my @obj = @_;
+#  my $i, $whr;
+#  foreach $i (@obj)
+  $i = $obj[0];
+  { ($i, $whr) = &resolve_obj($i, './'); 
+    $ret = &move ($i, './', '../');
+    case:
+    { (($ret==0) && ( print ("$i dropped$n"), last case));
+      (($ret==1) && ( print ("looks like a Wizzard has been at work$n",
+		"$i can't be droped$n"), last case));
+      (($ret==2) && ( print ("what $i?$n"), last case));
+      print ("internal error, drop$n");
+    }
+  }
+# each object
+}
+
+######################
+
+sub give
+{ my ($what, $who, $jnk) = @_;
+  my $whr;
+  ($what,$whr) = &resolve_obj($what, './');
+  ($who,$whr) =  &resolve_obj($who, '../');
+  $ret = move ($what, './', '../'.$who.'/' );
+  case:
+  { (($ret==0) && ( print ("Most generous$n"), last case));
+    (($ret==1) && ( print ("$who can't carry $what$n"), last case));
+    (($ret==2) && ( print ("you have no $what to give$n"), last case));
+    (($ret==3) && ( print ("$who is not available$n"), last case));
+    print ("internal error, give$n");
+  }
+}
+
+######################
+
+sub look
+# read and display first line of obj/.stst
+{ my ($what, $recurse) = @_;
+#  local *stats, *dir;
+#  my $where, $path;
+  $whatwhere = "";
+# look in surroundings?
+  if (!($what))
+  { if (open (STS, '<../.stats'))
+    { %stats = &read_stats(*STS);
+      close STS;
+      print $stats{'disc'}, "$n";
+    } else
+    { print "no stats $n"; }
+# list surroundings
+    opendir (DR,'../');
+    while ($dir = readdir(DR) )
+    { if ($dir !~ /^\./ )
+      { print ($dir, "$n");
+      } 
+    }
+    closedir (DR);
+  }
+# try object
+  elsif ( ($w, $where) = &resolve_obj($what, './', '../') )
+  { $path = "$where$w/.stats";
+    print "$w$n";
+    if (open (STS, $path))
+    { %stats = &read_stats(*STS);
+      close STS;
+      print $stats{'disc'}, "$n";
+    }
+    else
+    { print "what can I say, $w$n"; }
+  }
+# error...
+  else
+  { print ("what $what$n");
+    exit (0);
+  }
+}
+
+######################
+
+sub examine
+{ my ($what, $jnk) = @_;
+#  local *stats;
+#  my $where;
+  if ( ($what, $where) = &resolve_obj($what, './', '../') )
+  { open (STS, "$where$what/.stats");
+    %stats = &read_stats(*STS);
+    close STS;
+    print $stats{'disc'}, "$n";
+    print $stats{'moredisc'}, "$n";
+  }
+# error...
+  else
+  { print ("$what is not in your posession$n");
+    exit (0);
+  }
+}
+
+######################
+
+sub inventory
+{ #my @obj, $obj;
+#  local *direc;
+  opendir (DRC, '.');
+  $objcnt = 0;
+  @obj = grep (!/^\./, readdir(DRC) );
+  foreach $obj (@obj)
+  { print $obj, "$n";
+    $objcnt++;
+  }
+  closedir (DRC);
+  if ($objcnt ==0)
+  { print "No items$n";
+  }
+}
+
+######################
+sub say
+{ my ($who, $msg1, $msg2) = @_;
+# global or local speech?
+  if (($who, $whr) = &resolve_obj($who, '../') )
+  { &message ("../$who" , "$pname: $msg1 $msg2$n");
+    print $msg1,' ', $msg2;
+  }
+  else
+# must be global
+  { &global_message ('../' , "$pname: $who $msg1 $msg2$n");
+    print $who,' ',$msg1,' ',$msg2;
+  }
+}
+
+######################
+
+sub attack
+{ ($targ) = @_;
+  # read attack rating from char stats
+  ($a) = split ('\+', $mystats{'attl'});
+  # read armor rating, subtract from attack
+  $t = &lock(">+$targ");
+  %s = &read_stats($t);
+  $a -= $s{'ac'};
+  # update target hits
+  if ($a >0)
+  { ($b, $d) = split('-',$s{'con'});
+    $d += $a;
+    $s{'con'} = "$b-$d";
+    &write_stats($t, \%s);
+    &global_message ('../' , "$pname hits $targ for $a$n");
+  }
+}
+
+######################
+
+sub wear
+{ # read stats from armor
+  # update char stats
+}
+
+######################
+
+sub wield
+{ # read stats from weapon
+  # update char stats
+}
+
+######################
+
+sub go
+{ my ($where, @jnk) = @_;
+#  local *file;
+  ($w, $whr) = &resolve_obj($where, '../');
+# try going and see...
+  $ret = &move($ucpname, '../', "../$w/");
+  case:
+  { (($ret==0) && ( &look(), last case));
+    (($ret==1) && ( print ("$where is not a place you can go.$n"), last case));
+    (($ret==3) && ( print ("Where is $where?$n"), last case));
+    (($ret==5) && ( print "$where is locked$n", last case) );
+    print "internal error go$n";
+  }
+}
+
+######################
+
+sub exit
+{ local *stats;
+  if (!(-f '../.top'))
+  { &move ($ucpname, '../', '../../')
+    &look();
+  }
+  else
+  { open (STS, '../.top');
+    %stats = &read_stats (*STS);
+    close STS;
+    print ($stats{"disc"}, "$n");
+  }
+}
+
+######################
+
+sub help
+{ open (HLP, "$HOME/help");
+  print <HLP>;
+  close (HLP);
+}
+
+######################
+
+sub quit
+{}
+
+#!/usr/bin/perl
+# dmlib.pl
+# library of common routines for dirmud V 0.95;
+
+############################################
+
+sub lock
+{ my ($obj) = @_;
+#  local (*file);
+  if (open (F, $obj) )
+  { flock (F, 2);
+    return (*F);
+  }
+  0;
+}
+
+######################
+
+sub unlock
+{ local ($O) = @_;
+  flock (O, 8);
+  close (O);
+}
+
+######################
+sub read_stats
+{ local ($lock) = @_;
+#  local %stats, $stt, $stval, $stline;
+  seek ($lock, 0,0); 
+  while ($stline = <$lock>)
+  { ($stt, $stval) = split (/,/,$stline, 2);
+    $stats{$stt} = $stval;
+  }
+  return %stats;
+}
+
+######################
+
+sub write_stats
+{ local ($lck, $stats) = @_;
+  seek ($lck, 0,0);
+  foreach $stat (keys(%$stats))
+  { $value = $$stats{$stat};
+    if (($stat) && (defined ($value)))
+    { print $lck "$stat, $value\n";}
+  }
+}
+
+######################
+
+sub message
+{ my ($who, $msg) = @_;
+# fork for message delivery  
+  if (!fork() )
+  { #$xmit = 1;
+    if (open(M, ">>$who/.msg") )
+    { print (M $msg);
+      close (M);
+    }
+    exit;
+  }
+}
+
+sub global_message
+{ my ($where, $msg) = @_;
+  opendir (L, $where);
+  while ($who = readdir(L))
+  { if ($who !~ /^./)
+    { &message("../$who", $msg, 1);}
+  }
+  closedir(L);
+}
+
+##########################
+
+sub resolve_cmd
+{ my ($cmd, $param1) = @_;
+#  my $cmdr, $p1r, $dir;
+
+# object in scope with "use" ?
+#  ($cmdr, $dir) = &resolve_obj($cmd, './', '../');
+#  if (-x $dir.$cmdr."/.use")
+#  { return (\&runit, "$dir$cmdr/.use") ;}
+
+# method of $param1 ?
+  ($p1r, $dir) = &resolve_obj($param1, './', '../');
+  ($c, $dir) = &resolve_obj(".$cmd", "$dir$p1r/");
+  if (-x $dir.$c)
+  { return (\&runit, $dir.$c) ;}
+
+# a command in local area, special to char?
+  ($c, $dir) = &resolve_obj('.'.$cmd, './', '../');
+  if (-x $dir.$c)
+  { return (\&runit, $dir.$c ); }
+
+# standard command?
+  if ($c = $cmd_alias{$cmd} )
+  { return $c; }
+
+# a place (to go)?
+#  ($p1r, $dir) = &resolve_obj($cmd, '../');
+#  if ((-d $dir.$p1r) || (-l $dir.$p1r))
+#  { return (\&go, $p1r) ;}
+# not a valid command
+  0;
+}
+
+#################################################
+sub runit
+{ my ($cmd,$p1,$p2,$p3) = @_;
+#  local *method;
+  open (M, "$cmd $p1 $p2 $p3 |");
+  while (<M>) {print ;}
+  close M;
+}
+
+################################
+%default_stat =("disc" => "",
+		"con"  => "10-0",
+		"ac"   => 0,
+		"attl" => 1,
+		"size" => 100 );
+
+sub chklnk
+{ local ($file) = @_;
+  if (-l $file)
+  { readlink($file);}
+  else
+  { $file;}
+}
+
+#####################
+# moves objects.  Uniquifies name as necessary
+# return values
+# 1	size will not fit
+# 2	$what can't be found
+# 3	$to error
+# 4	$from error
+# 5	$to is locked
+sub move
+{ local ($what, $from, $to) = @_;
+#  local *whatg;
+#  local *dest, *basematch;
+  $what || return 2;
+# get stats of $what for checking
+  open (WG, "$from$what/.stats") || return 2;
+  %whatg = &read_stats (*WG);
+  close (WG);
+# lock, get stats for destination
+  ($destf = &lock ("$to.stats")) || return 3;
+  %dest = &read_stats ($destf);
+# check lock
+  if ($dest{'lock'})
+  { $whatg{$dest{'lock'}} || return 5;
+  }
+# check sizes
+# print "$what size $whatg{'size'}\n";
+# print "$to size $dest{'size'}\n";
+  ( $whatg{'size'} < $dest{'size'} ) ||
+    (&unlock ($destf), return 1);
+# extract base name of $what
+  $whatb = $what;
+  $whatb =~ /(\w)+_\d*/ ;
+# find any objects in $to with the same base name
+  opendir (D, $to);
+  @basematch = grep(/$whatb/, readdir(D) );
+  closedir (D);
+# transilate to easily searched form
+  foreach $cnt (@basematch)
+  { $basematch{$cnt} = 1;}
+
+  if (@basematch)
+# find an unused label
+  { for ($cnt = 1; !$basematch{$whatb."_$cnt"}; $cnt++) {}
+    $whatb = "$whatb_$cnt";
+  }
+# we have a unique label, move
+  rename($from.$what, $to.$whatb) ||
+   ( &unlock ($destf), 4);
+  &unlock ($destf);
+  0;
+}
+
+######################
+
+sub resolve_obj
+{ local @lookin = @_;
+  my $objshort = uc shift @lookin;
+#  my $obj, $found;
+  local *looki;
+# scan all directories in @lookin
+  foreach $looki (@lookin)
+# does any file present match /$objshort/ ?
+  { opendir (LI, $looki);
+    while ($obj = (readdir(LI)) )
+    { if (uc ($obj) =~ /^$objshort/)
+      { closedir (LI);
+        $obj = &chklnk($obj);
+        return ($obj, $looki);
+      }
+    }
+    closedir (LI);
+  }
+  0;
+}
+
+############################
+1;
+# login.pl
+# login routines for dirmud
+
+sub login
+{ $/ = "\r";
+  print "lsmud$n$n login$n";
+  do
+  { print "your character.$n 'new' if first time,$n 'exit' to quit$n>";
+    $ucpname = uc(<>);
+    print $ucpname;
+    $ucpname =~ s/\s//g;
+    if ($ucpname eq "NEW")
+    { &new_player;
+    }
+    if ($ucpname eq "EXIT")
+    { die "Hope to see you later$n";
+    }
+    if (!(-l "players/$ucpname"))
+    { print "$n Invalid Character: $ucpname$n$n";
+      sleep (2);
+    }      
+  } until (-l "players/$ucpname") ;
+# log in
+  $pdir = readlink("players/$ucpname");
+#  print ($pdir, $n);
+  chdir ($pdir);
+  if (rename ("../.$ucpname" , "../$ucpname" ))
+  { # check password
+    open (selff, ".stats");
+#    seek (selff, 0, 0);
+    print "logged in$n";
+  }
+  else
+  { print "character is already logged in$n",
+     "e-mail administraitor @ $admin$n";
+     die;
+  }
+  $pname= $ucpname;
+  $/ = "\n";
+  
+}
+
+sub logout
+{
+# change to current dir, fix pwd?
+#  chdir ('../'.$ucpname);
+  rename ("../$ucpname", "../.$ucpname");
+# find character
+  $wd = &finder(".$ucpname","$HOME/wldroot");
+  unlink ("$HOME/players/$ucpname");
+  symlink ("wldroot/$wd" ,"$HOME/players/$ucpname"); 
+  close (selff);
+#  kill 'INT', $child;
+}
+
+###############################################
+#collect stats and create a new character
+sub new_player
+{ local (*stats);
+# get a valid name
+  do
+  { print "$n name your character >";
+    $ucpname = uc (<>);
+    $ucpname =~ s/\s//g;
+    if ($bn=(-l "players/$ucpname"))
+    { print "$n'$ucpname' is already taken$n";
+    }
+  } until (!$bn);
+print "hello $ucpname$n";
+# create directories, linkage
+  $sr = readlink('start_room');
+  mkdir ("$sr/.$ucpname", 0700);
+  symlink("$sr/.$ucpname", "players/$ucpname");
+# get a discription of the character
+  print "enter a 1 line discription of your character:$n";
+  $pdisc = <>;
+  print "Your e-mail?> ";
+  $email = <>;
+# create stat files
+  chdir ("$sr/.$ucpname"); 
+  open (stats, ">.stats");
+  %stats = %default_stat;
+  $stats{'disc'} = $pdisc;
+  $stats{'email'} = $email;
+  &write_stats(*stats, \%stats);
+  close (stats);
+
+  chdir($HOME);
+# a message to the player
+  print ("You should be able to find what you need to get started$n",
+	"around town.  type 'help' for help$n");
+}
+# finder.pl
+# finds a file
+# finder (file, whr);
+sub finder
+{ my($filespec, $whr) = @_;
+  local *path;
+  my $search, $whrpth;
+  opendir path, $whr;
+  while ($path = readdir(path))
+  { $whrpth = $whr.'/'.$path;
+    if ($path =~ /^$filespec/)
+    { return ($path); }
+    if ( (-d $whrpth) && ($path !~ /^\./) )
+    { if ($search = &finder($filespec, "$whr/$path"))
+        { return "$path/$search";}
+    }
+  }
+  0;
+}
+1;

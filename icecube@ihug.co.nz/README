@@ -1,0 +1,67 @@
+First: this is very rushed as I'm about to lose the ability to work on it
+as of tomorrow. Apologies for lack of documentation, general messiness, and
+the fact it doesn't *do* much!
+
+If 
+
+Size:
+
+ 15587 bytes in .py files
+   777 bytes in data.gz
+ -----
+ 16364
+
+Starting it up:
+
+. run pygmy.py
+. connect to port 12345
+. login and create a character; the first character created will be an admin
+
+Mudftp:
+
+. push mode only
+. port 12351
+
+Commands:
+
+. User commands: who, say <text>, quit
+. Admin commands: mkadmin <playername>, edit <softcode path>,
+  eval <expression>, exec <statement>
+
+Features:
+
+. Editable Python softcode (fully extendable at runtime); driver/softcode
+  separation
+. Internal module-like namespace system
+. All softcode objects are automatically persistent
+. Compressed initial data sets (data.gz -- constructed by mkgz.py)
+. Somewhat disk-based; all softcode objects are effectively cached versions
+  of the data on disk (although cache flushing isn't present in this version
+  at all)
+. ... etc. read the code :)
+
+Random notes:
+
+. The softcode namespace stuff is complex. I won't have time to document it
+  properly. In summary:
+
+  sys, mud are the top-level package-like things
+  Some file mud/player.py defines the namespace for mud.player
+  If mud.player.player exists and is a class inheriting from Object, it is the
+  class for instances of mud.player objects (created by mud.player(), referred
+  to by mud.player.instance(id)). If mud.player.player.singleton == 1 then
+  mud.player() always refers to the same instance.
+
+  Other modules visible to the softcode:
+  . db: database stuff
+  . util: misc utils
+  . comm: communication (socket) I/O
+  . string, re: standard Python modules
+
+  See namespace.py for more info.
+
+  NOTE: be careful what you store on an instance, it's very easy to break
+  persistance currently (it's just pickled, you can't pickle methods or
+  functions currently)
+
+-Oliver, 25/04/00

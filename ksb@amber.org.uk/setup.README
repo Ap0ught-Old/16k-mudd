@@ -1,0 +1,19 @@
+Slight MUD setup notes....
+
+Slight runs on port 9999, to compile on a libc5 system..
+
+gcc smud.c  (in the src directory)
+
+on libc6
+
+gcc -lcrypt smud.c   (in the src directory)
+
+Commands available....
+
+say, kill, flee, consider, score, quit
+
+Directional commands - north,south,east,west,up,down,ne,nw,se,sw
+
+Have fun..
+Karl Bastiman
+

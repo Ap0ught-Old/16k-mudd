@@ -1,0 +1,55 @@
+Armors and holdables have five 'factor' bits wich can be set, in
+addition to three attribute bits (A, B, and C).
+
+------------------------------------------------------------------------
+
+Holdables
+
+The attribute bits combine as follows with the handedness bits in the
+equip bits field (1 = Pri, 2 = Sec, 3 = Both). Attribute C is used for
+damage calculations and is explained below:
+
+1-- Standard primary-hand weapon (mace)
+1AB Parrying primary hand weapon (longsword)
+
+2-- Standard secondary-hand weapon (hand axe, dagger)
+2A- Non-weapon secondary hand item (torch, wand)
+2-B Parrying secondary-hand item (shield)
+2AB Parrying secondary-hand weapon (main-gauche)
+
+3-- Standard two-handed weapon (halberd, quarterstaff)
+3AB Parrying two-handed weapon (claymore)
+
+For weapons, the factor bits determine damage dice, as listed in the
+following algorithm. Damage dice are limited in the following way: for
+each of the following attributes, the top bit is taken away: not
+two-handed; secondary; parrying. Thus, a two-handed weapon can have
+all five bits set. A secondary parrying weapon can have only the
+lowest two factor bits set. A primary standard weapon can have all
+but the highest bit set, as can a parrying two-handed weapon.
+
+Damage is determined in the following algorithmic manner:
+  1) The factor bits are actually a binary number n, which is in the
+     range 0-31, which is then doubled. If n is still less than
+     twice the number of bits b, n is raised to be twice b.
+  2) If attribute C is set, b = b - 1.
+  3) (s, r) = divmod(n, b). bds+r is rolled for damage.
+  4) Examples:
+       C b = 2, s = (0b00010 * 2) = 4     Roll: 1d4    (lowest)
+         b = 2, s = (0b00011 * 2) = 6     Roll: 2d3
+       C b = 3, s = (0b00110 * 2) = 12    Roll: 2d6
+         b = 3, s = (0b00111 * 2) = 14    Roll: 3d4+2
+         b = 4, s = (0b01101 * 2) = 26    Roll: 4d8+2
+         b = 5, s = (0b10010 * 2) = 36    Roll: 5d7+1
+         b = 5, s = (0b11111 * 2) = 62    Roll: 5d12+2 (highest)
+
+------------------------------------------------------------------------
+
+Wearables
+
+For now, the attributes are unused for wearables.
+
+For armor, the factor bits determine damage absorption. The lowest bit
+is 5% absorption. The next is 10%. The next 15%. The next 20%. And the
+last 25%. The absorption for all bits is added together. Therefore, the
+highest possible absorption is 75%.

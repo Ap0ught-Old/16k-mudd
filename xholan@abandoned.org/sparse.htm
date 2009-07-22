@@ -1,0 +1,131 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Eli Fulkerson">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (Win95; I) [Netscape]">
+   <meta name="Description" content="The homepage of a space genre MUD written for the 16k mud competition of May 1, 2000.  This submission was written entirely in Python.">
+   <meta name="KeyWords" content="python, mud, 16k, competition">
+   <title>Sparse MUD</title>
+</head>
+<body text="#000000" bgcolor="#FFFFFF" link="#0000EE" vlink="#551A8B" alink="#FF0000">
+<font size=+1>Sparse MUD.&nbsp; (</font><font color="#FF0000"><font size=+2>Spa</font></font><font size=+1>ce
+in a </font><font color="#FF0000"><font size=+2>r</font></font><font size=+1>eally
+</font><font color="#FF0000"><font size=+2>s</font></font><font size=+1>mall
+</font><font color="#FF0000"><font size=+2>e</font></font><font size=+1>nvironment)</font>
+<p>Information on the 16k mud competition is <a href="http://www.andreasen.org/16k">here</a>.
+<br>The source is available <a href="http://www.crosswinds.net/~forcharity/sparse.zip">here</a>.
+<br>My <a href="http://www.crosswinds.net/~forcharity/resume.htm">resume</a>.
+<br>Most current update of <a href="http://www.crosswinds.net/~forcharity/sparse.htm">this
+document</a>.
+<p><font size=+1>Introduction:</font>
+<br>My goal here was not to create the ideal server, but rather to implement
+a complete playable game, ignoring the ideal server aspects of it (saving
+files, logging in, reconnecting).&nbsp; My guess as to how much space my
+desired features would take, as it turns out, was some 500-700 bytes over
+the limit, but I was able to condense it down to a legal size (according
+to the 16k.py filesize checker) with a few snips of strings and some changes
+in the variable names.
+<p>What exists in this implementation is a multi-user server, that will
+accept connections, create a ship for the user, who can then trade and
+battle as he sees fit, until sucked into a black hole or destroyed by one
+of his opponents.&nbsp; Just to make death more painful, link to the server
+is cut upon your destruction.
+<p>The code itself is just under 16k in size, and is implemented in <a href="http://www.python.org">python</a>.&nbsp;
+I have been able to successfully run it both on my windows machine and
+on a *nix account as well, without any internal changes whatsoever.
+<p>
+<hr WIDTH="100%">
+<br><font size=+1>Features:</font>
+<br>-Generated world (approximately 1000 sectors), divided into 3 main
+zones:&nbsp; the core, the outer worlds, and the nebula beyond.
+<br>&nbsp;&nbsp;&nbsp; -Planets
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Each planet has its own
+prices for various ore.&nbsp; By trading between them, players can generate
+revenue.
+<br>&nbsp;&nbsp;&nbsp; -Stars
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -stars do not currently
+have much importance (other than determining where a planet can exist.)&nbsp;
+I had planned to have stars influence regeneration rates and visibility,
+which may appear once I am no longer working within the 16k barrier.
+<p>-ansi color
+<br>-basic combat system
+<br>&nbsp;&nbsp;&nbsp; -direct launching of torpedos against opposing vessels
+<br>&nbsp;&nbsp;&nbsp; -the ability to lay mines to block in opponents
+and place hazards along easy trade routes.
+<br>-basic trade system
+<br>&nbsp;&nbsp;&nbsp; -three types of ore that are traded planet to planet.&nbsp;
+Financial success allows for ship upgrades.
+<br>-movement
+<br>&nbsp;&nbsp;&nbsp; -'Wormgates' tie star systems together.&nbsp; They
+grow more chaotic as one travels further from the galactic core.
+<br>-regeneration
+<br>&nbsp;&nbsp;&nbsp; -Ships regain 1 unit of fuel and 1 unit of hp every
+realtime second.
+<p>
+<hr WIDTH="100%">
+<br><font size=+1>Commands:</font>
+<br>(each command can be abbreviated however you choose, as long as the
+first letter remains intact.)
+<p><b><font color="#000066">look</font></b>
+<br>Show the contents of the current sector, including wormgates, planets,
+and other ships.&nbsp; This command is <b><font color="#FF0000">free</font></b>
+to use.
+<p><b><font color="#000066">enter</font></b>
+<br>Move from one sector to another via a wormgate.&nbsp; This command
+requires an argument: the number of the wormgate which you wish to enter.&nbsp;
+Each use of this command consumes <b><font color="#FF0000">15 </font></b>units
+of fuel.
+<p><b><font color="#000066">radio</font></b>
+<br>The radio command forms a global channel with which to communicate
+with other players.&nbsp; This command is <b><font color="#FF0000">free</font></b>
+to use.
+<p><b><font color="#000066">?</font></b>
+<br>This command displays your information, including the contents of your
+cargo holds, your fuel and your ship's remaining health.&nbsp; This command
+is <b><font color="#FF0000">free</font></b> to use.
+<p><b><font color="#000066">name</font></b>
+<br>This command allows you to recommision your ship under a different
+name.&nbsp; This command is <b><font color="#FF0000">free</font></b> to
+use.
+<p><b><font color="#000066">dock</font></b>
+<br>This command must be used to dock with a planet's space station in
+order to conduct trade.&nbsp; While you are docked, you cannot move or
+commit any hostile acts.&nbsp; To leave the station, use the dock command
+a second time.&nbsp; This command costs <b><font color="#FF0000">10 </font></b>units
+of fuel per every use.
+<p><b><font color="#000066">quit</font></b>
+<br>This command performs a self-destruct, and closes your connection.&nbsp;
+You currently cannot save your progress.
+<p><b><font color="#000066">viewer</font></b>
+<br>This command performs a detailed scan of nearby space, revealing the
+location and status of your opponents.&nbsp; This command consumes <b><font color="#FF0000">50</font></b>
+units of fuel every time it is used.&nbsp; Use of this scan is detectable
+throughout known space.
+<p><b><font color="#000066">who</font></b>
+<br>This command returns a list of players currently connected to the game,
+their numerical IP's, and the number of seconds they have been online.&nbsp;
+This command is <b><font color="#FF0000">free</font></b> to use.
+<p><b><font color="#000066">buy</font></b>
+<br>This command, while docked, allows you to purchase ore.&nbsp; The syntax
+is, for example, 'buy ore1 100' to purchase 100 units of ore1.&nbsp; Also,
+via the syntax 'buy ship', you can purchase an upgrade, which will increase
+your capabilities.&nbsp; This command is <b><font color="#FF0000">free</font></b>
+to use.
+<p><b><font color="#000066">sell</font></b>
+<br>Similar in style to the 'buy' command, the sell command allows you
+to sell the contents of your holds.&nbsp; This command is likewise <b><font color="#FF0000">free</font></b>
+to use.
+<p><b><font color="#000066">torpedo</font></b>
+<br>Allows you to fire a torpedo at an opposing ship.&nbsp; Be warned,
+however, as each torpedo consumes <b><font color="#FF0000">500</font></b>
+units of fuel, and you may not be able to limp away before your opponent
+responds in kind.&nbsp; Currently, you cannot abbreviate your target's
+name, and it is case-sensitive.
+<p><b><font color="#000066">mine</font></b>
+<br>Allows you to deploy a subspace mine into a specific wormgate, where
+it will lurk and detonate against the hull of the next ship to pass through.&nbsp;
+Each deployed mine consumes <b><font color="#FF0000">200 </font></b>units
+of fuel.
+</body>
+</html>

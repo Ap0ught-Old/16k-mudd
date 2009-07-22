@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+################
+# main program #
+################
+require "lsmud";
+# unbuffered stdout
+$| = 1;
+
+&login;
+
+# create a message fifo
+if (!(-p ".msg"))
+{ if ( system('mknod',  ".msg", 'p') && system('mkfifo', ".msg") )
+  { die "'ear' creation failed";
+  }
+}
+
+# prepare IO
+open (MSG, "+<.msg");
+# stdin, stdout already open
+fcntl(MSG,F_SETFL(),O_NONBLOCK());
+# block next line for single step
+fcntl(STDIN,F_SETFL(),O_NONBLOCK());
+$read_set = new IO::Select;
+$read_set->add(\*STDIN);
+$read_set->add(\*msg);
+print "entering the world of lsmud$n$n>";
+
+# main loop
+while ($cmd ne 'quit') #&& ($cmd ne 'logout'))
+{ ($open_handles) = IO::Select->select($read_set, undef, undef, 30);
+# try each input
+  &incoming_msg();
+  &incoming_command();
+  $open_handles || print "well?$n>";
+
+} # leaving main loop
+&logout;

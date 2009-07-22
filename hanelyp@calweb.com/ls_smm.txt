@@ -1,0 +1,160 @@
+System Maintanence Manual
+lsmud V0.95
+C. Peter Hanely April 2000
+
+-------------------------------
+Contents:
+System requirements
+Instalation
+standard library of commands
+Data structures, external
+Data structures, internal
+Functions by source modual
+  dirmud.pl
+  dmlib.pl
+  dmlogin.pl
+  dmcmd.pl
+  finder.pl
+Adding user commands
+External commands and methods
+
+_____________________________
+System requirements:
+This software was developed with PERL5, Linux / BSD
+
+Minimum requirements to run this software are:
+- PERL5 interpreter
+- Premptive multitasking OS
+- Heiarchical file system with symbolic links
+- Named pipes(FIFO's)
+
+----------------------------------------------
+Instalation:
+from desired install directory, run lsmud.dst.  This will create program and
+data files.
+
+To start mud, run 'server' as a background process.
+
+Include is a NPC, in wldroot/longdock/guard.  To start, run .life as
+background.
+----------------------------------------------
+standard library of commands:
+
+get|take <what>
+drop|throw <what>
+give <what> <who>
+look|read <what>
+examine <what>		you must own <what>
+inventory
+
+say [who] <message>
+
+attack <who>
+wear <what>		wear a set of armor(or other item)
+wield <what>		use a given weapon
+
+go|goto|move <where>	can simply give place
+exit			leave a room
+
+help|? [command]
+
+quit|logout
+_____________________________
+Data structures, external:
+
+ world root is an place.
+ places are objects.
+ players and other characters are objects.
+ artifacts are objects.
+ object is a directory.
+ object contains spec files, methods, other objects, and immutable objects.
+ places may contain links to other places.
+ An oject may contain any object smaller than themselves.
+ 
+spec files include:
+
+.top	prevents 'exit'.  In wldroot, locked cells.
+
+.stats	contains stats for object.
+this file is formatted, 1 stat to a line, as:
+	<statname>,<statvalue>\n
+stats include:
+	disc	a discription of the object
+	moredisc, further discription when examing object
+	con,<base>-<dammage>
+		running total of characters health.
+	ac,<base>[+armor,amount]
+	attl,<base>[+weapon,amount]
+	size	100 for most characters, larger for places
+		smaller for most artifacts.
+
+Other stats may be added for use by new functions.
+Not all stats will be present for all objects.
+&lock this file before adding any new objects inside the object.
+
+.msg	a pipe of messages to char
+
+.alive	primary method for NPC
+
+.*	various methods associated with object
+
+file 'help', quick help on commands
+---------------------------
+Data structures, internal:
+
+- stats
+stats are represented internally by a hash indexed by the stat name.
+%default_stat is a default for objects creation, defined in dmlib.pl
+
+- %cmd_alias
+a hash of commands and aliases to functions.
+
+---------------------------
+Functions
+  lsmud
+	main program
+	incoming_msg();
+		Processes messages in .msg
+	incoming_command();
+		processes command line
+		call command resolution
+		executes command
+	lock($obj) return *filehandle, unlock(*lock)
+		locking interface
+	read_stats(*filehandle) return %stats,
+	write_stats(*filehandle, \%stats)
+		interface between .stats file and hash representation.
+	message($who, $message, [$recurse])
+		sends massages to other objects
+	global_message($where, $message)
+		processes message to all receptients in a room 
+	resolve_cmd($cmd, $param) return (\&command, [$parameter])
+		checks if a command is:
+		- a method for first (after processing) parameter
+		- a method of the character or area
+		- a standard command
+		returns a specifier of how to run command.
+	runit($cmd,$p1,$p2,$p3)
+		runs an external method $cmd.
+	chklink($file) returns $resolved_file
+		resolves a potentual symbolic link
+	move($what, $from, $to) return ($error_code)
+		moves objects around.
+	resolve_obj($what, $where [,$where *])
+		finds an object, includes name completion.
+	login()
+		logs a player into the game.  effects globals.
+	logout()
+		logs a player out.
+	new_player()
+		creates a new character for a player.  Rather skeletal.
+  	finder($filespec, $whr)
+
+	Also: functions for each user command, indexed in cmd_alias
+______________________________
+External commands and methods
+lsmud makes provision for commands unique to specific objects to be
+implimented external to the main code.  To utilize this, it is necessary to
+place an executable file for the special command inside the object defining
+scope.  It is recomended that library functions be used for interface.
+See (Data structures, external), (resolve_cmd)

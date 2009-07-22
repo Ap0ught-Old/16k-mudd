@@ -1,0 +1,28 @@
+You are free to use and distribute SerenityMUD as wish, subject to the following
+restrictions.
+
+You may not charge for or profit from the distribution of SerenityMUD in any way.
+This includes, but is not limited to, including SerenityMUD on any CD or disk which you
+are charging for, or charging access fees to download SerenityMUD from a web or ftp site.
+This license must always be included "as is" if you copy or give away any part of
+SerenityMUD.
+
+You may not charge for or profit from the use of SerenityMUD in any way.
+This includes, but is not limited to, charging players to access a game run using the
+SerenityMUD software. However, you MAY accept donations so long as all donations are used
+to cover the costs outlined below and the total sum of donations in a given year is not
+greater than $2400 or your total expenses, whichever is less.
+
+The costs which may be considered expenses for which donations are acceptable are:
+
+1) Your internet access fees.
+2) Any fees charged by the owner of the machine on which you run the SerenityMUD software.
+3) If you own the machine on which you run the SerenityMUD software, any internet access
+   fees for that machine, and the cost of any upgrades to that machine.
+
+No other costs are considered expenses for which donations are acceptable. You may not,
+under any circumstances, provide any sort of service or compensation in return for
+donations.
+
+You may freely distribute any modifications you make to SerenityMUD, subject to the same
+restrictions that apply to distribution of SerenityMUD as a whole.

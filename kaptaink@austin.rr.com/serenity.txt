@@ -1,0 +1,47 @@
+SerenityMUD
+also known as "ThisHasGotToBeTheBiggestCPUWasterEverMUD"
+
+Mitch Burton "Gikmo" [kaptaink@austin.rr.com]
+
+For those of you who don't read all the way to the end of these, please send any comments
+or suggestions to the above email address.
+
+I didn't hear about the contest until a few days before the deadline, so I tried more to
+make something I could work on later than to make something that would win. SerenityMUD
+is event based. If you want an explanation of the system, read event.txt.
+
+The bootup script, such as it is, is seren.py. Port 1616 is default.
+
+There is nothing to do except walk around. No prompt. You can talk though. Try "commands"
+for a list. Yes, anyone can shut down the mud right now. You need a password. Hint: it's
+in cmds.py.
+
+The makedirs.py script doesn't need to be run since I didn't get player saving in before
+the deadline.
+
+Erm, pretty much entirely written on Sunday and Monday, the day before the deadline and the
+deadline respectively. A couple little bits (the socket stuff and part of the first try at
+an event system) were written during the prior week. I apologize for any bugs I didn't
+catch in my very limited testing.
+
+Theoretically it's an event-driven MUD that does cool stuff. I redid the way events work
+3 times in said 2 days, which is why there is nothing cool to do yet. The first two times
+events worked in braindead ways. I'm fairly happy with how it works now.
+
+But, I've probably got it all horribly wrong. Never tried implementing an event system
+before in any sort of program.
+
+Sorry for the poor commenting and lack of more docs. Didn't have too much time.
+
+I mostly just entered to see how it would stack up, and for fun. =)
+
+Comments are welcome, especially regarding the way the events are set up. In particular
+I would like to hear things of a "You are doing it this way, but this other way would be
+a lot better" nature.
+
+By the way, does anyone else out there think asyncore sucks?
+
+It seems to like throwing connect events for sockets that are closing, and when it finally
+does call handle_close, it calls it multiple times for each close?? WTF man. I know what
+the first thing on my post-contest todo list is -- gonna get the defenestration action
+going on.

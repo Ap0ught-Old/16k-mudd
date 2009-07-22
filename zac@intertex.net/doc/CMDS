@@ -1,0 +1,32 @@
+PLAYER
+------------------------------------------------------------------------
+chat  - sends a message to the chat channel
+descr - alters the player's description
+drop  - drops an item
+equip - toggle the 'equipped' status of an item
+emote - perform an emote (also: :, em)
+get   - takes an item (also: take)
+go    - moves in the specified direction (auto-generated from neswud)
+inv   - takes inventory of the player (also: i)
+kill  - attacks another living
+look  - looks at the room or an object (also: l, x, exa)
+put   - puts an item in a container
+quit  - exits the game
+say   - says something (also: ')
+score - prints out information about the player (also: sc)
+tell  - tells another player something
+title - alters the player's title
+trade - trades with another player
+who   - shows all players logged in
+use   - use an item (read, use, quaff, light/extinguish)
+
+WIZARD
+------------------------------------------------------------------------
+dig   - create a new room in a given direction
+ex    - execute a Python statement
+goto  - goes to a room or player
+make  - make a new object or monster
+res   - edit or view resource data
+trans - summon a player
+users - show detail about logged in users
+wiz   - sends a message to the wiz channel

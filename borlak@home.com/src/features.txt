@@ -1,0 +1,53 @@
+Features of Borlak's 16kbyte MiniMud!
+-------------------------------------
+Efficient memory handling:  Memory is recycled by the use of free 
+linked lists.
+
+"Crash-Proof":  Nothing is crash proof, but I did my best to prevent 
+them.  First off by making macros for my memory handling that
+ automatically removes/adds/maintains a memory recycling structure.  
+No accidental screw ups!  Also my allocation of strings is carefully 
+checked to make sure that no memory is left floating in space and never 
+deleted.
+
+Easy to handle code:  I made the file names obvious, the .h files are 
+nicely split up to find what you need fast.  The code in general has 
+the same design.  No fancy pants code that you have to spend a while to 
+figure out.
+
+Dynamic pfiles:  Pfiles aren't saved as binary but as an extendable 
+(MERC'ish) format.
+
+Error logging:  I didn't skimp on error logging ;-)  And oh yeah, I 
+have logging ;-)
+
+Crypted passwords: ...
+
+Chat room:  I first made a really weak fighting system, but it was just 
+so lame and no fun that I decided to just keep a general chat room.  In 
+fact, this may not be a mud at all, but a chat server :)
+
+Simple sockets: Take a look for yourself!
+
+Lack of features
+----------------
+No wizards.
+
+No combat.
+
+No OLC, rooms, mobs, objects.
+
+Bad sleep system.  Mud loops once a second.
+
+
+Personal Summary
+----------------
+It's not fun, unless you like to chat!  I had a combat system, but 
+removed it.  I decided I wanted a base that others could work off of.  
+I want to help the mud community.  So I have a basic "MERC"ish design 
+that I think many people will feel comfortable with and will be able 
+to easily build off of.  From my testing, it's completely stable, and 
+there are no bugs.  My code looks very much like MERC, because I've
+spent 6 years working only on MERC muds :)
+
+

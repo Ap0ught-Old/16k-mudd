@@ -1,0 +1,216 @@
+----------------------------------------------------------------------
+                              OVERVIEW
+----------------------------------------------------------------------
+OK, you cannot have a masterpiece in 16k of source but it is enough
+to make a complete game providing players are willing to accept that
+the scope of such a game must be narrowed. The main purpose of my
+game is to wander around and explore, find cool places including
+spotting any landmarks that the MUD admin might have put about and
+have semi-serious PK-style combat if you feel like some sport. It is
+also designed to be a general purpose talker where players can chat
+and emote to each other and generally hang around and be friends.
+
+I get irritated with talkers where everyone hangs in the one big
+room but all communicate by private messages so each new login randomly
+teleports you (forced exploration :-) and no message is completely
+private (though if two people walk a long way away from anywhere then
+their normal speech will only carry for a short distance just as one
+might expect). Similarly, there is no game-wide chat channel, though
+shouting carries a reasonable distance (radius of effect can be
+tweaked by the admin, current settings are the end result of a little
+less than 1000 hours of intensive play-testing :-).
+
+Just to piss off the big mouths on various development lists (you
+know who you are) I decided to implement a bunch of features in 16k
+that most builders cannot achieve in any space:
+
+* Realistic outdoor maps including terrain, nice ASCII pictures of
+  the local area and 8 directional movement. This uses my own unique
+  mapping engine and a very efficient algorithm (though in this
+  implementation some efficiency was sacrificed in order to keep it
+  simple).
+
+* A dynamic description engine that recycles chunks of description in
+  a (mostly) self-consistent manner and allows a few descriptive
+  phrases to be pushed into covering a range of circumstances. The
+  same engine can be added to with more descriptive phrases and they
+  will all work together in a way that lets the player use the
+  description to reason about their position in the world. All of the
+  MUD is outdoors (no dungeon!) and I have tried to make the
+  descriptions as pleasant and refreshing rather than the all-to-common
+  darkly boding. With a bit of care the whole flavour of the game
+  could be rewired by changing the descriptions.
+
+* Ranged combat with realistic distance calculation. In fact, all
+  combat is ranged combat. If you hit someone you have a chance of
+  knocking them off the MUD (i.e. forcing them to quit) resulting
+  in them losing their equipment and needing to find their place
+  again. Regaining equipment is not very difficult and everyone has
+  equal weapon proficiency so combat is not intended to be overly
+  serious.
+
+----------------------------------------------------------------------
+                               STARTUP
+----------------------------------------------------------------------
+The first time the game boots it will be a little bit slow because
+it is building the map. After that it will load the map from file
+and will be much quicker to bootstrap. Make sure you login first
+as `guru' with a good password because if someone else uses the guru
+character then you will have to delete the game data and start again.
+The guru character is the local `god' of the game and not a normal
+player character.
+
+----------------------------------------------------------------------
+                                LOGIN
+----------------------------------------------------------------------
+All names are a single word, name and password are entered on the
+same line (password text is visible on normal telnet), first word is
+the character name, rest of the line is the password. Blank passwords
+are allowed and only match another blank password. Any new name is
+always accepted without special character creation routines, later
+use of that name will require an identical password. Once a password
+is set for a given name it cannot be changed unless the save data is
+wiped (or edited externally in some way).
+
+Each new login moves the player to a random location. If you appear
+in a position where you cannot move then quit and login again. Finding
+your friends requires either wandering around and shouting or knowing
+your way to get to some meeting place (or logging in and out again
+and again until you pop up next to somebody).
+
+----------------------------------------------------------------------
+                               COMMANDS
+----------------------------------------------------------------------
+All commands have equal time penalty except `map' which is much slower
+and `entry' which is very slow (to prevent the who-list changing too
+often).
+
+n		move north at full speed
+n 50		move north at 50% of full speed
+n 10		move north at 10% of full speed
+ne		move northeast at full speed
+e		move east at full speed
+se		move southeast at full speed
+s		move south at full speed
+sw		move southwest at full speed
+w		move west at full speed
+go fred		walk towards fred (must be able to see fred)
+go fork		walk towards the landmark called `fork'
+
+look		get a description of your local environment
+look fred	get a copy of character fred's description
+look fork	get a copy of the `fork' landmark's description
+l		get a description of your local environment
+map		draw an ASCII map of your local environment
+
+say Hello	speak the word `Hello'
+' Hello		speak the word `Hello'
+emote dances	dance around a bit
+: dances	dance around a bit
+shout Hey	shout the word `Hey'
+! Hey		shout the word `Hey'
+
+face		clear your description
+face Way cool	set your description to `Way cool'
+who		get a list of players that are not hidden
+entry		hide yourself from the who-list
+entry Munculus	list youself on the who-list as `Munculus'
+
+kill fred	throw something at fred and try to knock him out
+
+quit		leave the game (logout)
+
+----------------------------------------------------------------------
+                          GURU COMMANDS
+----------------------------------------------------------------------
+The player called `guru' is the MUD administrator (extra commands)
+
+shutdown	terminate the server
+hyper fred	teleport through hyperspace to where fred is
+kick fred	force fred to quit the MUD (fred can login again)
+mark Road forks	place a landmark with the description `Road forks'
+mname fork	give the landmark the name `fork'
+mark		give this landmark an empty description
+mname		remove the name from this landmark (i.e. delete it)
+
+The guru also gets to see absolute coordinates and can move over
+all terrain at maximum speed (thus n 20 will move the guru exactly
+20 steps north while other characters will move something less than
+20 depending on terrain).
+
+----------------------------------------------------------------------
+                          TIPS & FEATURES
+----------------------------------------------------------------------
+When the game self-initialises, it builds a map and terrain
+descriptions for that map but you get no landmarks. The game admin
+must take the guru character around and build landmarks (and write
+their landmark descriptions) in order to add depth and story to the
+game.
+
+Don't put landmarks on square (0,0) because no one will see them.
+
+Landmarks don't work properly without a name so try to remember to
+give each landmark a name with the `mname' command. Use the `mname'
+and `mark' commands over the top of an existing mark to change it.
+
+Don't put landmarks too close together or players find movement
+confusing, this is especially bad if close-together landmarks have
+the same or similar names (unless the intent is to cause confusion).
+
+Shouting can carry a long way so walking around and shouting every
+so often is a good way to let a lot of people know where you are.
+
+The who-list also gives directions to help people walk closer to
+each other but there is no verification of entries on the who-list
+so players may use each other's names or anything else that they
+want. Do not presume that who-list information gives a complete or
+accurate picture of the game state. Global communication via the
+who-list is possible at a severe time penalty (and may be snooped
+by anyone). As a general suggestion, players should put their
+email address or ICQ number into the who list if they want to chat
+in an `out of character' context rather than chat through the list
+itself.
+
+Logins who don't actually login can be used to invisibly snoop a
+random area (but they can't figure out what area they are snooping).
+
+Moving around with normal direction commands gives you some chance
+to pick up a weapon, using the `go' command to move between people
+or landmarks will never let you find a weapon because you are paying
+too much attention to the thing you are walking towards.
+
+When hanging around not doing much, you are still looking around
+for landmarks. When you `notice' a landmark you will remember its
+position for a while afterwards so you can use it for navigation.
+You will also be able to notice characters moving around in your local
+area and if those characters move onto a landmark you will recognise
+that landmark. Walking into a landmark automatically notices it.
+
+Drawing a map of an area takes time and you won't be able to keep
+track of who is moving around close to you. Looking at the terrain
+is much faster but usually not as helpful as a map.
+
+All weapons are range weapons and they may miss their target,
+they will always land somewhere though! If more than one character
+is under the missile when it lands then they ALL get hit. The
+volcanic bombs have a `blast radius' so they can do a lot of damage
+if a group of characters are clustered in a small space.
+
+A graphical depiction of the default map is available at:
+   <http://www.triode.net.au/~telford/mud/map.png>
+
+----------------------------------------------------------------------
+                              INTERNALS
+----------------------------------------------------------------------
+
+Database keys:
+
+R %d %d         -- room terrain
+M %d %d         -- landmark description
+m %d %d         -- landmark name
+N %s            -- character name
+P %s %s         -- character name with pass phrase
+D %s            -- character description
+W %s            -- who list entry
+w %s            -- preliminary who list entry
+

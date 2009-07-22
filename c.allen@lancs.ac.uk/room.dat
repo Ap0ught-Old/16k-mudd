@@ -1,0 +1,2 @@
+Room::addRoom {Entrance Lobby} {This is a dull room.} {{zen 2}}
+Room::addRoom {Zen Sim} {This is the ZenMOO simulation room.} {{lobby 1}}

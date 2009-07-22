@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+use strict;
+use Socket;
+use Carp;
+
+my $port = shift || 1067;
+my $proto = getprotobyname('tcp');
+$port = $1 if $port =~ /(\d+)/; # untaint port number
+
+socket(Server, PF_INET, SOCK_STREAM, $proto) &&
+setsockopt(Server, SOL_SOCKET, SO_REUSEADDR, pack("l", 1)) &&
+setsockopt(Server, SOL_SOCKET, SO_KEEPALIVE, pack("l", 1)) &&
+bind(Server, sockaddr_in($port, INADDR_ANY)) &&
+listen(Server, 5)
+	|| die $!;
+
+$SIG{'CHLD'} = sub{wait};
+
+while (accept(Client,Server))	
+{# print "connection\n";
+  if (!fork)
+  { close Server;
+    open(STDIN,  "<&Client") &&
+    open(STDOUT, ">&Client") || die "can't dup to stdio";
+    exec './lsmain' || die "can't exec lsmud: $!";
+  }
+  close Client;
+}

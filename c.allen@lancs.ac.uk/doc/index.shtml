@@ -1,0 +1,96 @@
+<HTML>
+<HEAD>
+<TITLE>Crappotalk - A 16k Talker Written in Tcl</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF">
+
+<IMG SRC="crappotalk.png" ALIGN="left" ALT="">
+<IMG SRC="crappotalk.png" ALIGN="right" ALT="">
+
+<H1><CENTER>Crappotalk - A 16k Talker Written in Tcl</CENTER></H1>
+
+<BR CLEAR="ALL">
+
+<H2>Introduction</H2>
+
+<P>Crappotalk is a simple server written in tcl and has been designed to work on UNIX only.  It has the following features:
+
+<UL>
+  <LI>Character persistance.
+  <LI>Online command editing and creation.  Saves changes to disk.
+  <LI>PUSH mode mudFTP server.
+  <LI><A HREF="http://zenmoo.zennet.com/">ZenMOO</A>-alike chamber.
+  <LI>Configurable telnet GA support.
+  <LI>High score table for Zen-mode.
+  <LI>Talker facilities. (TELL, SHOUT, SAY, EMOTE)
+  <LI>Execution of arbitrary tcl commands.
+  <LI>Who list.
+  <LI>User list.
+  <LI>Rooms.
+  <LI>Editable (via mudftp) character descriptions.
+  <LI>Time command.
+  <LI>Idle time of player displayed on who list.
+  <LI>Stack trace sent to the executor of a command if it fails.  (Useful when editing commands.)
+  <LI>Stable server. (>5 days uptime recorded so far)
+  <LI>[tasteful?] ANSI color (&d - reset, &y, &m, &r, &g, &c, &b (black), &l (blue), &w)
+  <LI>Total number of players online count.
+  <LI>Look command.
+</UL>
+
+<P>Crappotalk uses just under 16k of diskspace for its source and datafiles.
+
+<PRE>
+> ./16k.py -l -h -b tclmud/* tclmud/*/* > output
+> less output
+File size:                    21347 bytes
+Lines:                         1094
+\r striped:                   21347
+# removed:                    18599
+leading blanks removed:       16623
+blank lines stripped:         16362
+
+Final result:                 16362
+                             ======
+
+Size is acceptable.
+</PRE>
+
+<H2>Download</H2>
+
+<P>The source code will be downloadable once the competition closing date has passed.
+
+<H2>Installation Instructions</H2>
+
+<P>Simply unpack the file you downloaded:
+
+<PRE>
+tar xzf tclmud.tar.gz
+</PRE>
+
+<P>Change to the <CODE>tclmud</CODE> directory:
+
+<PRE>
+cd tclmud
+</PRE>
+
+<P>Start the server:
+
+<PRE>
+tclsh server.tcl
+</PRE>
+
+<P>Connect to it.  It should be running on port 1234:
+
+<PRE>
+telnet localhost 1234
+</PRE>
+
+<P>If you want to change the port the server listens on, change the PORT variable in the server.tcl file.
+
+<H2>Documentation</H2>
+
+<P>The latest user manual can be downloaded from <A HREF="user.ps.gz">http://penguin.lancs.ac.uk/crappotalk/user.ps.gz</A> in gzipped postscript format.
+
+</BODY>
+</HTML>

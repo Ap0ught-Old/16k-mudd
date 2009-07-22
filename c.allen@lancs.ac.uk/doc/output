@@ -1,0 +1,883 @@
+Error reading file tclmud/log
+Error reading file tclmud/users
+File size:                    22469 bytes
+Lines:                         1157
+\r stripped:                  22469
+# removed:                    18748
+leading blanks removed:       16677
+blank lines stripped:         16383
+
+Final result:                 16383
+                             ======
+
+Size is acceptable.
+
+Modified file follows
+=====================
+lapp ::cmdtable {commands Command::cmdcommands}
+P cmdcommands {s a} {
+S o "Commands available to you:\n"
+FE c $::cmdtable {
+append o " [lindex $c 0]\n"
+}
+send $s $o
+}
+lapp ::cmdtable {emote Command::cmdemote}
+P cmdemote {s a} {
+if {$a != ""} {
+sendToAllRoom $s "&@$::name($s) $a"
+}
+}
+lapp ::cmdtable {ga Command::cmdga}
+P cmdga {s p} {
+if {$::ga($s)} {
+S ::ga($s) 0
+send $s "Turning GA off."
+} {
+S ::ga($s) 1
+send $s "Turning GA on."
+}
+}
+lapp ::cmdtable {go Command::cmdgo}
+P cmdgo {s p} {
+FE e $Room::exits($::loc($s)) {
+if {[lindex $e 0] == $p} {
+if {$::loc($s) == 2} {
+S ::at($s) [calc $s]
+S ::ta($s) [expr $::ta($s) + [time] - $::is($s)]
+}
+starb $s "$::name($s) goes to $Room::name([lindex $e 1])."
+S ::loc($s) [lindex $e 1]
+starb $s "$::name($s) has arrived."
+send $s "You move to $Room::name($::loc($s))."
+Command::cmdlook $s {}
+if {$::loc($s) == 2} {
+S ::is($s) [time]
+}
+ret
+}
+}
+send $s "You cannot go that way."
+}
+lapp ::cmdtable {look Command::cmdlook}
+P cmdlook {s c} {
+if {$c == ""} {
+S loc $::loc($s)
+S o "&c$Room::name($loc)\n&m\[&dExits:"
+FE e $Room::exits($loc) {
+append o " [lindex $e 0]"
+}
+append o "&m\]&d\n$Room::desc($loc)"
+FE so $::sl {
+if {$::state($so) == $::SP} {
+if {$::loc($so) == $::loc($s)} {
+if {$so != $s} {
+append o "\n$::name($so) is here."
+}
+}
+}
+}
+send $s $o
+ret
+}
+S u [findUser $c]
+if {$u != ""} {
+if {$::loc($u) == $::loc($s)} {
+send $s "You look at $::name($u)\n$::desc($u)\nOn from $::hostname($u)\nOn since [clock format $::ls($u)]"
+::sendToAllBut $s "$::name($s) looks at $::name($u)"
+ret
+}
+}
+send $s "Didn't find any '$c'"
+}
+lapp ::cmdtable {qui Command::cmdqui}
+P cmdqui {s p} {
+send $s "If you want to QUIT, spell it out."
+}
+lapp ::cmdtable {quit Command::cmdquit}
+P cmdquit {s a} {
+if {$::loc($s) == 2} {
+S ::at($s) [calc $s]
+S ::ta($s) [expr $::ta($s) + [time] - $::is($s)]
+}
+send $s "Quitting.\nIdle [expr $::at($s) * 100 / $::ta($s)]%."
+Server::save $::name($s) $::pw($s)
+::sendToAllBut $s "$::name($s) has quit."
+Server::disconnect $s
+}
+lapp ::cmdtable {say Command::cmdsay}
+P cmdsay {s p} {
+send $s "&mYou say, '$p&m'"
+starb $s "&m$::name($s) says, '$p&d&m'"
+}
+lapp ::cmdtable {shout Command::cmdshout}
+P cmdshout {s p} {
+send $s "&yYou shout '$p&y'"
+sendToAllBut $s "&y$::name($s) shouts '$p&d&y'"
+}
+lapp ::cmdtable {shutdown Command::cmdshutdown}
+P cmdshutdown {s p} {
+puts $::name($s)
+puts $p
+if {$::name($s) == "Zoia" && $p == "yes"} {
+sendToAll "Shutting down."
+S ::SD 1
+file delete reboot
+ret
+}
+sendToAll "Rebooting NOW!"
+S ::SD 1
+}
+lapp ::cmdtable {tcl Command::cmdtcl}
+P cmdtcl {s c} {
+if {[regexp {exec} $c]} {
+send $s "Naughty!"
+ret
+}
+if {[catch {
+send $s "[eval $c]"
+}] == 1} {
+send $s $::errorInfo
+}
+}
+lapp ::cmdtable {tell Command::cmdtell}
+P cmdtell {s p} {
+if {[regexp {^([^ ]+) (.*)$} $p d u m] == 0} {
+send $s "Syntax: tell <player> <message>"
+ret
+}
+S v [findUser $u]
+if {$v != ""} {
+if {$::state($v) == $::SP} {
+send $v "&c$::name($s) tells you, '$m&d&c'"
+send $s "&cYou tell $::name($v), '$m&d&c'"
+ret
+}
+}
+send $s "I can't find anyone called '$u'."
+}
+lapp ::cmdtable {time Command::cmdtime}
+P cmdtime {s p} {
+send $s "Crappotalk started up on $::ST.\nIt is [date] in Lancaster, England.\nThere have been $::TU logins since boot."
+}
+lapp ::cmdtable {top Command::cmdtop}
+P cmdtop {s m} {
+FE p $::sl {
+if {$::state($p) == $::SP} {
+S j "$::name($p)"
+lapp j "$::at($p)"
+lapp j "[expr $::at($p) * 100 / $::ta($p)]"
+lapp l $j
+}
+}
+S o "Top meditators:"
+FE e [lsort -decreasing -index 1 -integer $l] {
+append o [format "\n%-16s %5d %3d%%" [lindex $e 0] [lindex $e 1] [lindex $e 2]]
+}
+send $s $o
+}
+lapp ::cmdtable {users Command::cmdusers}
+P cmdusers {s a} {
+S i 0
+FE so $::sl {
+incr i
+S h $::hostname($so)
+S u $::name($so)
+if {$::state($so) == $::SV} {
+S u "Unknown"
+}
+append o [format "%-20s %-40s\n" $u $h]
+}
+append o "You see $i user(s)."
+send $s $o
+}
+lapp ::cmdtable {who Command::cmdwho}
+P cmdwho {s a} {
+S c 0
+S o "Users of crappotalk on [date]"
+FE so $::sl {
+if {$::state($so) == $::SP} {
+incr c
+append o [format "\n%-15s %-40s" $::name($so) $::Room::name($::loc($so))]
+}
+}
+append o "\n&dYou see $c users."
+send $s $o
+}
+namespace eval Command {
+P addCommand {name a body} {
+removeCommand $name
+S fp [open cmd$name.tcl w]
+puts $fp "lapp ::cmdtable \{$name Command::cmd$name\}"
+puts $fp "P cmd$name \{$a\} \{\n$body\n"
+close $fp
+source "cmd$name.tcl"
+S ::cmdtable [lsort -index 0 $::cmdtable]
+}
+P removeCommand {name} {
+FE cmd $::cmdtable {
+if {[lindex $cmd 0] == "$name"} {
+S ::cmdtable [lreplace $::cmdtable [lsearch $::cmdtable $cmd] [lsearch $::cmdtable $cmd]]
+}
+}
+catch {rename cmd$name.tcl ""}
+}
+P edit {s name} {
+if {$name == ""} {
+send $s "Syntax: cmdedit <command>"
+ret
+}
+catch {unset str}
+if {[catch {
+S str "P cmd$name \{[info args cmd$name]\} \{[info body cmd$name]\}"
+}] == 1} {
+puts $::errorInfo
+S str "P cmd$name \{s p\} \{\n\}"
+}
+Editor::edit $s $str Command::edit_cb
+}
+P edit_cb {s str} {
+FE l [split $str \n] {
+if {[regexp {P cmd([^ ]+) \{(.*)\} \{} $l d n a] == 1} {
+} {
+append data $l\n
+}
+}
+addCommand $n $a $data
+send $s "Command $n added"
+}
+}
+lapp cmdtable {desc Command::desc}
+lapp cmdtable {cmdedit Command::edit}
+namespace eval Command {
+P desc {s a} {
+Editor::edit $s $::desc($s) Command::desc_cb
+}
+P desc_cb {s d} {
+S ::desc($s) $d
+send $s "Description now:\n$d"
+}
+}
+namespace eval Editor {
+P edit {s st cb} {
+if {$::mudftp($s) != 0} {
+Mudftp::push $::mudftp($s) $st $cb $s
+} {
+send $s "Editing requires mudFTP.
+ret $st
+}
+}
+}
+Å say it better to Ç É with Ñ than to Ö for Ü.
+Å thinks you are Ç, but not É because that would mean Ñ is not Ö nor Ü.
+Å = Ç but not É = Ñ.
+Å equals Ç and Ç equals É but Å does not equal É.
+Å is unto Ç for É.
+Until Å nothing will Ç but for É if Ñ has any Ö to say about Ü.
+Å Ç and É Ñ with Ö doing Ü á, not à â.
+My Å Ç is É Ñ for Ö Ü á à, â.
+Your Å Ç É if Ñ Ö Ü á would à.
+I Å but you Ç so maybe É is not Ñ for Ö, or Ü. Maybe á à with â.
+Å Ç É Ñ Ö Ü á à â.
+I can't Å Ç É, nor Ñ Ö.
+I can Å Ç as É Ñ, not as Ö Ü.
+I'd rather Å Ç than É Ñ, as Ö Ü.
+I can Å my Ç.
+I can't Å my Ç, nor my É with my Ñ.
+Most Å and Ç are better É than Ñ Ö.
+I've lost Å for Ç.
+We all Å Ç but neither do we É Ñ.
+I'm being Å by Ç and É. Perhaps Ñ is Ö, jealous of É.
+You will Å Ç for É, that is, not for Å Ñ, nor Å Ö, but Å Ç (in Ü).
+I say Å, you say Ç, I say É, you say Ñ, let's agree upon Ö.
+I believe Å would Ç, if É is not Ñ, as it should not be.
+Å tells Ç that É is not Ñ. Nor is Ö Ü.
+ë knows Å. However, í does not know ë is Ç.
+ë disagrees with í with regard to Å.
+ë uses Å to Ç É í, ì gets revenge with Ñ.
+ë thinks on Å, not unlike í thinks on Ç.
+Å is like thinking of Ç, not É, because Ñ is Ö.
+To consider Å as a Ç for É is to be with ë on the Ñ path to Ö.
+When ë considers Å, í is not thinking of Ç.
+I have my Å in my Ç. I gave ë my É, which I kept in my Ñ.
+namespace eval Mudftp {
+P init {p} {
+V ID
+socket -server Mudftp::accept $p
+S ID 0
+}
+P accept {sock host port} {
+Server::addConnection $sock $host $::SM
+}
+P interpret {s l} {
+if {$::state($s) == $::SM} {
+Mudftp::auth $s $l
+ret
+}
+if {$::state($s) == $::SA} {
+command $s $l
+ret
+}
+if {$::state($s) == $::SW} {
+ret
+}
+if {$::state($s) == $::SR} {
+retrieve $s $l
+ret
+}
+}
+P push {s d ca ps} {
+V cb
+V psock
+V ID
+S psock($s) $ps
+S cb($s) $ca
+S c 0
+FE l [split $d \n] {
+incr c
+}
+puts $s "SENDING [incr ID] $c c"
+puts $s $d
+S ::state($s) $::SR
+}
+P retrieve {s l} {
+V data
+V count
+V total
+V cb
+V psock
+if {[regexp {^PUT [^ ]+ ([0-9]+)$} $l d total($s)] == 1} {
+S count($s) 0
+S data($s) {}
+ret
+}
+append data($s) $l\n
+incr count($s)
+if {$total($s) == $count($s)} {
+S ::state($s) $::SW
+puts $s "OK csum"
+$cb($s) $psock($s) $data($s)
+}
+}
+P command {s l} {
+if {$l == "PUSH"} {
+puts $s OK
+S ::state($s) $::SW
+ret
+}
+puts $s "FAILED PUSH only"
+Server::disconnect $s
+}
+P auth {so l} {
+V total
+V count
+V data
+V cb
+V psock
+if {[regexp {^([^ ]+) ([^ ]+)$} $l d u p] == 1} {
+S u [Server::nm $u]
+FE s $::sl {
+if {$::name($s) == $u} {
+if {$::pw($s) == $p} {
+puts $so "OK mudFTP 2.0"
+S ::mudftp($s) $so
+S ::name($so) $u\(mudftp\)
+S ::pw($so) $p
+S ::state($so) $::SA
+S psock($so) 0
+S total($so) 0
+S count($so) 0
+S data($so) {}
+S cb($so) {}
+ret
+}
+}
+}
+}
+puts $so FAILED
+Server::disconnect $so
+}
+}
+onion
+apple
+pear
+can
+bin
+fish
+rabbit
+pork
+box
+sardine tin
+bottle
+wine
+glass
+lego
+train
+computer
+table
+poster
+skeleton
+raincoat
+bear
+"Å" is to "Ç" as "É" is to...
+Å is most unlike. . .
+Enter a noun please:
+Enter a verb, if you will...
+Type a name for me.
+Will you key in an adjective?
+Please type a gerund.
+Enter an adverb for me.
+I think Å is Ç. Tell me how you feel:
+If Å were Ç, show me what É would be.
+You know what a Å does to Ç. Tell me what happens with É.
+Whyfore the Å for ë, ask I you.
+What is the nature of Å?
+Everyone knows the nature of Å with respect to Ç, what is this?
+ë said you knew about Å. Reply, telling them about something.
+Pontificate on the Å of ë when í is Ç.
+Not as ë, who is the Å epitome of Ç É?
+I say ë, you say í. Upon what shall we agree?
+Explain Å, when ë is considering Ç instead of Å.
+Why did you join our meditation?
+Enlighten me on the difference between Å and Ç.
+If Å Ç is near to ë, then É Ç. Respond or snooze.
+Do tell on Å and Ç.
+Room::addRoom {Entrance Lobby} {This is a dull room.} {{zen 2}}
+Room::addRoom {Zen Sim} {This is the ZenMOO simulation room.} {{lobby 1}}
+namespace eval Room {
+S ID 0
+P addRoom {n d e} {
+V ID
+V name
+V desc
+V exits
+V roomlist
+S i [incr ID]
+S name($i) $n
+S desc($i) $d
+S exits($i) $e
+lapp roomlist $i
+}
+}
+source room.dat
+rename variable V
+rename lappend lapp
+rename return ret
+rename set S
+rename proc P
+rename foreach FE
+source comtable.tcl
+source comeditor.tcl
+source mudftp.tcl
+source editor.tcl
+source room.tcl
+source zen.tcl
+Zen::init
+S PORT 4000
+S TU 0
+S SV 0
+S SP 1
+S SM 2
+S SA 3
+S SW 4
+S SR 5
+S SD 0
+S sl {}
+S FM "Invalid username/password."
+S files {}
+if {[catch {glob cmd*.tcl} files] == 0} {
+FE f $files {
+namespace eval Command "source $f"
+}
+}
+S ::cmdtable [lsort -index 0 $::cmdtable]
+namespace eval Server {
+P initSocket {} {
+socket -server Server::accept $::PORT
+Mudftp::init [expr $::PORT+6]
+vwait SD
+FE s $::sl {
+close $s
+}
+exit $::SD
+}
+P accept {s rhost rport} {
+addConnection $s $rhost $::SV
+puts $s $::M
+}
+P addConnection {s h st} {
+S ::mudftp($s) 0
+S ::desc($s) "I'm too boring to set a description."
+S ::name($s) 0
+S ::pw($s) 0
+S ::loc($s) 1
+S ::Zen::qu($s) 0
+S ::Zen::tf($s) 0
+S ::ga($s) 0
+S ::ta($s) 1
+S ::is($s) [time]
+S ::ls($s) [time]
+S ::at($s) 0
+fconfigure $s -buffering line -blocking FALSE -translation auto
+fileevent $s readable "Server::data $s"
+S ::hostname($s) $h
+S ::state($s) $st
+lapp ::sl $s
+}
+P data {s} {
+if [eof $s] {
+disconnect $s
+ret
+}
+S l [gets $s]
+if {$::state($s) < $::SM && $l == ""} {
+ret
+}
+interpret $s $l
+}
+P interpret {s m} {
+if {$::state($s) >= $::SM} {
+Mudftp::interpret $s $m
+ret
+}
+if {$::state($s) == $::SV} {
+if {[regexp {^connect ([^ ]+) ([^ ]+)$} $m d u p] == 1} {
+S u [nm $u]
+connect $s $u $p
+ret
+}
+if {[regexp {^create ([^ ]+) ([^ ]+)$} $m d u p] == 1} {
+S u [nm $u]
+create $s $u $p
+ret
+}
+if {$m == "quit"} {
+disconnect $s
+ret
+}
+puts $s $::M
+ret
+}
+if {$m == ""} {
+ret
+}
+if {$::loc($s) == 2} {
+if {[::Zen::interpret $s $m] == 1} {
+ret
+}
+}
+if {$::state($s) == $::SP} {
+S p {}
+if {[regexp {^[ ]*([^ ]+) (.*)[ ]*$} $m d c p] == 0} {
+if {[regexp {^[ ]*([^ ]+)[ ]*$} $m d c] == 0} {
+send $s "Error."
+ret
+}
+}
+FE i $::cmdtable {
+if {[string match "[string tolower $c]*" "[lindex $i 0]"]} {
+if {[catch {
+[lindex $i 1] $s $p
+}]} {
+send $s $::errorInfo
+}
+ret
+}
+}
+}
+send $s "'[lindex $m 0]': unknown command."
+}
+P nm {n} {
+S n [string tolower $n]
+S n "[string toupper [string range $n 0 0]][string range $n 1 end]"
+ret $n
+}
+P disconnect {s} {
+S ::sl [lreplace $::sl [lsearch $::sl $s] [lsearch $::sl $s]]
+close $s
+}
+P connect {s u p} {
+FE so $::sl {
+if {$::name($so) == $u} {
+if {$::pw($so) != $p} {
+puts $s $::FM
+ret
+}
+S ::name($s) $::name($so)
+S ::pw($s) $::pw($so)
+S ::state($s) $::SP
+disconnect $so
+incr ::TU
+::sendToAllBut $s "$::name($s) has reconnected."
+send $s "You have reconnected."
+ret
+}
+}
+if {[catch {
+S f [open "users/$u" r]
+gets $f l
+if {$p == $l} {
+logon $s $u $p
+} {
+puts $s $::FM
+}
+}]} {
+puts $s $::FM
+}
+ret
+}
+P create {s u p} {
+FE s $::sl {
+if {$::name($s) == $u} {
+puts $s "Already connected. Use connect to reconnect."
+ret
+}
+}
+if {[catch {
+S f [open "users/$u" r]
+S t 1
+}] == 1} {
+S t 0
+}
+if {$t == 1} {
+close $f
+puts $s "That name is already taken."
+ret
+}
+logon $s $u $p
+ret
+}
+P logon {s u p} {
+S ::name($s) $u
+S ::pw($s) $p
+S ::state($s) $::SP
+save $u $p
+incr ::TU
+::sendToAllBut $s "$u has logged on."
+lapp $Zen::ul $u
+puts $s "The 'commands' command will give you a list of commands.\nUse the 'ga' command to enable telnet GA/EOR."
+Command::cmdlook $s {}
+}
+P save {u p} {
+S f [open "users/$u" w]
+puts $f $p
+close $f
+}
+}
+P send {s m} {
+S l {{b 30} {r 31} {g 32} {y 33} {l 34} {m 35} {c 36} {w 37} {d 0} {@ 1}}
+FE c $l {
+S d [lindex &$c 0]
+regsub -all "$d" $m \033\[[lindex $c 1]m m
+}
+puts $s $m\033\[0m
+puts -nonewline $s "$Room::name($::loc($s)) > "
+if {$::ga($s)} {
+puts -nonewline $s "\377\357"
+}
+flush $s
+}
+P sendToAll {m} {
+FE s $::sl {
+if {$::state($s) == $::SP} {
+send $s $m
+}
+}
+}
+P sendToAllBut {s m} {
+FE so $::sl {
+if {$so != $s && $::state($so) == $::SP} {
+send $so $m
+}
+}
+}
+P starb {s m} {
+FE so $::sl {
+if {$so != $s && $::state($so) == $::SP && $::loc($so) == $::loc($s)} {
+send $so $m
+}
+}
+}
+P sendToAllRoom {s m} {
+FE so $::sl {
+if {$::state($so) == $::SP && $::loc($so) == $::loc($s)} {
+send $so $m
+}
+}
+}
+P findUser {m} {
+FE s $::sl {
+if {[string match [string tolower $m]* [string tolower $::name($s)]]} {
+ret $s
+}
+}
+ret
+}
+P date {} {
+ret [clock format [clock seconds]]
+}
+P time {} {
+ret [clock seconds]
+}
+P calc {s} {
+ret [expr $::at($s) + [time] - $::is($s)]
+}
+S ST [date]
+S M "Welcome to crappotalk.\nThe server started up: $::ST\nUse \"connect username password\" to reconnect to an existing user\nUse \"create username password\" to create a new one\nUse \"quit\" to exit."
+Server::initSocket
+set TCLSH=tclsh8.0
+touch reboot
+while ( -e "reboot" )
+$TCLSH ./server.tcl > log/log.`date +%b-%d-%H:%M:%S`
+end
+Teator
+Nemon
+Zoia
+Fastjack
+Drylock
+Othalis
+namespace eval Zen {
+P read {a} {
+S f [open $a r]
+while {[eof $f] == 0} {
+S l [gets $f]
+if {$l != ""} {
+lapp o $l
+}
+}
+ret $o
+}
+P init {} {
+V nl {} ql {} ml {} ul {} tl {}
+S ul [read user]
+S nl [read noun]
+S ml [read mantra]
+S ql [read question]
+after [rtime] Zen::mantra
+after 300000 Zen::fidget
+}
+P rtime {} {
+ret [expr round(rand() * 25000) + 15000]
+}
+P mantra {} {
+V qu
+V nl
+V ql
+V ml
+V ul
+V pq
+V tl
+S l {}
+after [rtime] Zen::mantra
+FE p $::sl {
+if {$::loc($p) == 2} {
+lapp l $p
+}
+}
+if {[catch {
+S r [expr round(rand() * [llength $l])]
+if {$r >= [llength $l]} {
+S r [expr [llength $l] - 1]
+}
+S s [lindex $l $r]
+}] == 1} {
+ret
+}
+if {$s == ""} {
+ret
+}
+if {$qu($s) > 0} {
+ret
+}
+if {[expr rand() * 4] > 1} {
+S o [getLine $ml]
+} {
+S qu($s) [after 60000 Zen::asleep $s]
+S o [getLine $ql]
+}
+FE i {"\x81" "\x82" "\x83" "\x84" "\x85" "\x86" "\x87" "\x88" "\x89"} {
+regsub -all "$i" $o [getLine $nl] o
+}
+FE i {"\x91" "\x92" "\x93"} {
+regsub -all "$i" $o [getLine $ul] o
+}
+S pq($s) $o
+send $s $o
+}
+P getLine {l} {
+S i [expr round(rand() * [llength $l])]
+if {$i >= [llength $l]} {
+S i [expr [llength $l] -1]
+}
+S o [lindex $l $i]
+ret $o
+}
+P asleep {s} {
+starb $s "$::name($s) has fallen asleep."
+send $s "Stay awake during meditation, dingbat!"
+S ::is($s) [time]
+Command::cmdquit $s {}
+}
+P interpret {s m} {
+V qu
+V pq
+V nl
+V ul
+V tf
+if {$qu($s) > 0} {
+after cancel $qu($s)
+S qu($s) 0
+catch {
+if {[regexp {name} $pq($s)] == 1} {
+lapp ul $m
+} {
+lapp nl $m
+}
+}
+starb $s "$::name($s) mutters something."
+send $s "Thankyou, enlightened one."
+S ::at($s) [calc $s]
+id $s
+ret 1
+}
+incr tf($s)
+if {$m == "quit" || [regexp {^go .*$} $m]} {
+ret 0
+}
+id $s
+starb $s "$::name($s) shuffles around."
+switch $tf($s) {
+1 {send $s "Fidgeting prevents true enlightenment."}
+2 {send $s "You're disturbing other meditators."}
+3 {send $s "Quit fidgeting! You'll get kicked out."}
+4 {
+S tf($s) 0
+kick $s
+ret 1
+}
+}
+ret 0
+}
+P id {s} {
+S ::ta($s) [expr $::ta($s) + [time] - $::is($s)]
+S ::is($s) [time]
+}
+P kick {s} {
+send $s "You've been booted from the Zen Room for fidgeting."
+starb $s "$::name($s) is booted from the Zen Room."
+S ::loc($s) 1
+Command::cmdlook $s {}
+starb $s "$::name($s) appears through the door from the Zen Room."
+send $s "In all the hubbub, you forget what you were trying to do."
+}
+P fidget {} {
+V tf
+after 300000 Zen::fidget
+FE s $::sl {
+S tf($s) 0
+}
+}
+}
+test
+delboy
+
