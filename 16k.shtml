@@ -1,0 +1,382 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+<HEAD>
+  <TITLE>16K MUD competition - results</TITLE>
+  <LINK href='/style.css' rel='stylesheet' type='text/css'>
+  <META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <META NAME="generator" content="SmartHTML">
+</HEAD>
+<BODY>
+
+<table class="main">
+<tr>
+	<td>
+<h1>16K MUD competition - results</h1>
+
+
+<P>
+<h2>The Results Announcement</h2>
+
+<P>
+In April 2000, I announced the 16k MUD competition. Shortly, it was about
+creating the most interesting MUD in a mere 16 kilobyte of <b>source code</b>
+(not including blank lines). You can read more about the rules in the
+<a href="16k-original.shtml">original announcement</a>.
+
+<P>
+Finally, the results for the competition are ready. Below is the announcement
+mail sent out to all the contestants.
+
+<P>
+<hr>
+The 16k MUD competition results are finally available! The delay was caused by
+mostly by me being rather overloaded with work (I curse, among other things,
+the quirkiness of the WAP standard and the different ways the phones implement
+things ;) ) and for that I apologize. I have thrown in some extra prizes to
+make up for my tardiness ;)
+
+<P>
+I must say that many of the entries positively surprised me. Throughout the
+years, I have collected just about every MUD codebase imaginable, which comes
+to perhaps half a gigabyte of source and data. Several of the competition
+entries have still managed to come up with ideas that i have not seen before.
+
+<P>
+I have seen (through the magic of automatic referrer logging ;) ) that already
+at least two of the MUDs entered in the competition have been started evolving
+to something greater. I hope that the results of this competition will
+encourage innovation in the MUD competition, and that every other MUD
+announced on the MudConnector will have its own unique concept, rather than
+being a grand-parent of Diku.
+
+<P>
+As mentioned in the competition rules, there is a winner for each of the
+categories - H (for high-level languages) and L for low-level.
+
+<P>
+In the H category, the winner is <b>Brebion Flavin's (brebionf@club-internet.fr)
+&quot;Fantasy Lands&quot; MUD</b>. Brebion managed to squeeze in a unique multi-player
+full-color rogue-like game, programmed in Python and C. His entry included
+also excellent documentation and discussion of the design issues, which is
+IMHO worth as much as good source.
+
+<P>
+It was harder to decide a winner in the L category. After some consideration,
+I will award the first prize to <b>Ben White (benwhite@senet.com.au) for his
+&quot;Tank Mage Deathmatch&quot; game</b>. Ben succeeded in implementing very playable game
+into 16k -- the carefully designed combat system is excellent, requiring
+players to plan ahead and think very carefully what they were doing. Perhaps
+we will see similar tactical combat systems appear in mainstream MUDs, to
+replace the rather tired Diku model. I hope Ben, or someone else, will improve
+on the design, add features like lists of the best fighters, etc. and perhaps
+put up a MUD somewhere where it's publically available (as a sidenote, I think
+a system like the various CRobots (computer controlled &quot;robot&quot; programs
+fighting each other in an arena) games would work well with Ben's combat
+system).
+
+<P>
+Runner-up: With so many interesting MUDs in L category, I decided to award
+another prize to the runner-up. The prize goes to <b>Telford Tendys
+(telford@triode.net.au)</b>. Telford's creation was a roomless, persistent MUD,
+with an auto-generated world and dynamic descriptions. The number of features
+is quite surprising, considering the MUD was written in C.
+
+<P>
+Category winners: I will also award 3 of the entries with a small prize for
+having the highest score in a category (this does not, however, include any of
+the entries that have already won). The prize is a USD 50 gift certificate to
+Amazon.com/Amazon.co.uk (but see below).
+
+<P>
+In Maintainability, the clear winner is <b>Richard &quot;Kavir&quot; Woolcock's
+(kavir@kavir.org) &quot;The Gladiator Pits&quot; entry</b>. The C-code is simply
+exquisite, with very light macro usage, instructive function names and superb
+commenting: every function is commented with its purpose, arguments it takes
+and what value it returns. In addition, plenty of user documentation is
+included, carefully describing every available command. Out of original Diku's
+647k of code, about 70k (11%) were comments. For &quot;Gladiator Pits&quot;, the number is 18k
+out of 39k (46%!).
+
+<P>
+In Features, the winner (although behind Ben and Telford) is <b>Michael Clarke's
+(mykael@vianet.net.au) Java-based Medusa's Garden MUD</b>. Extensive communication
+system, online creation of rooms, objects and socials/souls as well as full
+persistence.
+
+<P>
+In Technology, the award goes to <b>Oliver &quot;Nemon&quot; Jowett's (icecube@ihug.co.nz)
+Python-based PygmyMUD</b>. The MUD implements a classical driver/library split
+where the users can write code to modify the MUD but the code runs in a
+restricted environment. The MUD is fully persistent, with objects loaded from
+disk on-demand. Hopefully Oliver will provide a version of the code that is
+better-documented and without one-character variable names ;)
+
+<P>
+Prizes: The prizes is a USD 200 gift certificate to Amazon.com (or
+Amazon.co.uk, sponsored by me), a year's MUD hosting at Andrew Edgerton's Xbox
+service and a USD 100 certificate to Amazon.com (also sponsored by me). Ben
+will get to pick a prize first, then Brebion, then finally Telford. 
+
+<P>
+NOTE: I am willing to exchange the the gift certificates to Amazon for cash
+(transferred probably via X.com) if so desired, since three of the winners
+live in Australia, one in New Zealand, one in France and one in UK.
+
+<P>
+Please email if you accept (or decline) your award. As this mail reaches you,
+this information plus a table with grades and judges' notes about the MUD
+should be available at http://www.andreasen.org/16k.shtml
+
+<P>
+Thanks to everyone for the entries -- and see you in the 32k MUD competition
+(just kidding ;) )
+
+<P>
+<hr>
+
+<P>
+<h2>Download the MUDs</h2>
+
+<P>
+Here are all the MUDs that entered the competition. You can also download
+everything, as <a href="/misc/16k.tar.gz">.tar.gz</a> or <a href="/misc/16k.zip">ZIP</a> file
+(size: 400k). These compressed files will unpack with one directory per contestant.
+
+<P>
+<table border=1>
+<tr><th align="left" colspan=5> <u>High-level</u></tr></th>
+<tr>
+    <th>Author </th> 
+    <th>Download/ <br>Homepage</th> 
+    <th>Language</th> 
+    <th>Score</th> 
+<th>Award</th>
+</tr>
+
+<P>
+<tr>
+    <td>Catherine &quot;Zoia&quot; Allen </td>
+    <td><a href="http://penguin.lancs.ac.uk/crappotalk/">Homepage</a> </td>
+    <td>Tcl</td>
+    <td>33.10</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Brebion &quot;Ysanea&quot; Flavin</td>
+    <td><a href="http://www.unantes.univ-nantes.fr/~brebion/16kentry.htm">Homepage</a></td>
+    <td>Python/C</td>
+    <td>36.50</td>
+    <td><b>Winner, high-level</td></b>
+</tr>
+
+<P>
+<tr>
+    <td>Oliver &quot;Nemon&quot; Jowett</td>
+    <td><a href="/misc/16k-download/pygmy.tar.gz">Download</a></td>
+    <td>Python</td>
+    <td>32.00</td>
+    <td><b>&quot;Technology&quot; winner</td></b>
+</tr>
+<tr>
+    <td>Xholan</td>
+    <td><a href="http://www.crosswinds.net/~forcharity/sparse.htm">Homepage</a></td>
+    <td>Python</td>
+    <td>32.80</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Doug Swarin</td>
+    <td><a href="/misc/16k-download/fresnel-16k.tar.gz">Download</a></td>
+    <td>Python</td>
+    <td>27.10</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Peter Hanely</td>
+    <td><a href="http://www.calweb.com/~hanelyp/lsmud/lsmud.html">Homepage</a></td>
+    <td>Perl</td>
+    <td>33.10</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Mitch &quot;Gikmo&quot; Burton</td>
+    <td><a href="/misc/16k-download/seren5-1-00.zip">Download</a></td>
+    <td>Python</td>
+    <td>27.90</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr><th align="left" colspan=5> <u>Low-level</u> </tr></th>
+
+<P>
+<tr>
+    <td>Michael &quot;Borlak&quot; Morrison</td>
+    <td><a href="http://www.borlak.org/acm/index.html">Homepage</a></td>
+    <td>C</td>
+    <td>25.80</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Ben White</td>
+    <td><a href="/misc/16k-download/tmd.tar.gz">Download</a></td>
+    <td>C</td>
+    <td>40.50</td>
+    <td><b>Winner, low-level</td></b>
+</tr>
+
+<P>
+<tr>
+    <td>Ari Johnson</td>
+    <td><a href="/misc/16k-download/ari-mud.tar.gz">Download</a></td>
+    <td>C++</td>
+    <td>29.00</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Blane Bramble</td>
+    <td><a href="http://www.iowa-mug.net/">Homepage</a></td>
+    <td>C++</td>
+    <td>32.60</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Russel ?</td>
+    <td><a href="/misc/16k-download/mughi.tar.gz">Download</a></td>
+    <td>C++</td>
+    <td>32.50</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>David Kristola</td>
+    <td><a href="http://members.aol.com/drveg/mud/index.html">Homepage</a></td>
+    <td>ADA</td>
+    <td>28.30</td>
+    <td>Best ADA entry ;)</td>
+</tr>
+
+<P>
+<tr>
+    <td>Richard &quot;KaVir&quot; Woolcock</td>
+    <td><a href="http://www.kavir.org/">Homepage</a></td>
+    <td>C</td>
+    <td>37.70</td>
+    <td><b>&quot;Maintanability&quot; winner</td></b>
+</tr>
+
+<P>
+<tr>
+    <td>Karl Bastiman</td>
+    <td><a href="/misc/16k-download/smud.tar.gz">Download</a></td>
+    <td>C</td>
+    <td>33.20</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Michael Clarke</td>
+    <td><a href="/misc/16k-download/medusa.zip">Download</a></td>
+    <td>Java</td>
+    <td>35.30</td>
+    <td><b>&quot;Features&quot; winner</td></b>
+</tr>
+
+<P>
+<tr>
+    <td>Jeremiah &quot;Quzah&quot; Myers</td>
+    <td><a href="/misc/16k-download/qposmud.zip">Download</a></td>
+    <td>C</td>
+    <td>26.10</td>
+    <td>&nbsp;</td>
+</tr>
+
+<P>
+<tr>
+    <td>Telford Tendys</td>
+    <td><a href="/misc/16k-download/telford.tar.gz">Download</a></td>
+    <td>C</td>
+    <td>37.80</td>
+    <td><b>Runner-up, low-level</td></b>
+</tr>
+
+<P>
+</table>
+
+<P>
+<h2>Grades</h2>
+
+<P>
+Each MUD was given a grade in one of 5 categories. The final score is a
+weighted sum of those numbers (e.g. Features meant much higher than Stability).
+
+<P>
+You can see the <a href="/misc/gradesheet.txt">grade sheet</a> or you can read my
+<a href="/misc/16k-notes.txt">notes</a> about each category of each MUD to get a
+better idea of where the grades come from.
+
+<P>
+ </td>
+    <td width=250>
+<!--NOSEARCHSTART-->
+<TABLE class='box' cellspacing='0'><TR><TH>What's new</TH></TR> <TR><TD> 
+<TABLE class='news' CELLSPACING=1>
+ <TR><TD class='date'>Nov 16</TD> <TD> A few user contributions to <a href="/LeakTracer/">LeakTracer</a></TD></TR>
+ <TR><TD class='date'>Sep 19</TD> <TD> The wonderful world of CSS</TD></TR>
+ <TR><TD class='date'>Feb 13</TD> <TD> New <a href="/misc.shtml">XEmacs</a> elisp -- C/C++ utilities</TD></TR>
+</TABLE>
+
+
+ </TD></TR></TABLE>
+<br>
+<TABLE class='box' cellspacing='0'><TR><TH>Site navigation</TH></TR> <TR><TD> 
+<div class="navigation">
+<dl>
+<dt><b><a href="/">Home and links</a> </b>
+<dt><a href="/mud.shtml">MUD</a>
+<dd><a href="/snip.shtml">Code snippets</a>
+<dd><a href="/16k.shtml">16K - tiny MUD competition</a>
+<dd><a href="/letters/">Letters about MUD Development</a>
+<dd><a href="/mcl/">MUD Client for UNIX</a>
+<dd><a href="/webring.shtml">Webring for MERC programmers</a>
+<dd><a href="/faq/">MERC FAQ</a>
+<dd><a href="/mudftp/">mudFTP</a>
+<dd><a href="/newmud/">New MUD codebases listing</a>
+<dd><a href="/bartle/">MUD personality test</a>
+<dt>Other projects
+<dd><a href="/LeakTracer/">LeakTracer</a>
+<dd><a href="/smart/">SmartHTML</a>
+<dd><a href="/misc.shtml">Misc code <img src="/images/new.gif" alt="[New!]"></a>
+</dl>
+<hr>
+<b><a href="mailto:erwin+website@andreasen.org"><img src="/images/mailto.gif" alt="Email me at erwin+website@andreasen.org"> Email me</a></b>
+ </div>  </TD></TR></TABLE>
+
+<P>
+<br>
+<TABLE class='box' cellspacing='0'><TR><TH>External links for this page</TH></TR> <TR><TD> 
+  </TD></TR></TABLE> 
+<!--NOSEARCHEND-->
+</td>
+
+    </tr>
+</table>
+
+
+</BODY></HTML>

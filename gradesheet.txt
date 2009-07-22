@@ -1,0 +1,45 @@
+            Feat    Maint   Stabil  Tech    Fun     Total
+
+c.allen     7       7       7       6       6 
+brebion     7       8       8       7       7
+icecube     6       7       8       8       5
+xholan      7       6       8       6       6
+zac         5       6       6       6       5
+hanely      7       7       6       7       6
+kaptaink    4       6       8       8       5
+
+borlak      4       7       5       6       5
+benwhite    9       6       9       6       9
+ari         6       5       8       6       5
+blane       7       5       8       5       7
+cryptic     6       6       8       6       7
+drveg       5       6       7       7       5
+kavir       7       10      8       6       7
+ksb         7       5       8       6       7
+mykael      8       7       7       7       6
+quzah       4       6       7       6       5
+telford     8       7       8       8       7
+
+
+Weighting: Feat*1.6, Maint*0.9, Stab*0.6, Tech*0.6, Fun*1.3
+
+The below is auto-generated:
+
+     1  benwhite      9  6  9  6  9 = 40.50
+     2  telford       8  7  8  8  7 = 37.80
+     3  kavir         7 10  8  6  7 = 37.70
+     4  brebion       7  8  8  7  7 = 36.50
+     5  mykael        8  7  7  7  6 = 35.30
+     6  ksb           7  5  8  6  7 = 33.20
+     7  hanely        7  7  6  7  6 = 33.10
+     8  c.allen       7  7  7  6  6 = 33.10
+     9  xholan        7  6  8  6  6 = 32.80
+    10  blane         7  5  8  5  7 = 32.60
+    11  cryptic       6  6  8  6  7 = 32.50
+    12  icecube       6  7  8  8  5 = 32.00
+    13  ari           6  5  8  6  5 = 29.00
+    14  drveg         5  6  7  7  5 = 28.30
+    15  kaptaink      4  6  8  8  5 = 27.90
+    16  zac           5  6  6  6  5 = 27.10
+    17  quzah         4  6  7  6  5 = 26.10
+    18  borlak        4  7  5  6  5 = 25.80

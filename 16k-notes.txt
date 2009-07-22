@@ -1,0 +1,448 @@
+c.allen@lancs.ac.uk (port 4206)
+-------------------------------
+
+Features: basic color, decent communication (say, shout, tell, emote), little
+administrative features (users, shutdown), online coding (new commands, but
+lacking security), no online creation, no objects, some player customization
+(descriptions), persistence (players save, created commands save), mudftp
+
+
+Stability: strange things happen with too long lines on SAY, using certain
+characters locks up the session, problems handling broken connections to
+users, names are not checked for special characters such as .. resulting in a
+security hole.
+
+Maintainability
+ Well-formatted documentation (12 pages) in postscript format.
+ New rooms can be by editing room.dat file
+ Zen room can be expanded with new nouns/mantras
+
+Technology
+ Low CPU usage, medium (4MB) memory usage -- mostly because of the TCL 
+ interpreter.
+
+
+borlak@home.com
+---------------
+
+Features:
+ basic communication (global, personal), logging, players
+ save, encrypted passwords
+
+Stability:
+ tends to deadlock, characters can appear multiple times on who list, using
+ /tell on a non-existing character seems to send the tell to oneself, dropping
+ link causes strange results for others, doesn't use SO_REUSEADDR resulting
+ in long wait times after the MUD goes down before it can go up again
+
+Maintainability:
+ No tricks were used to reduce code size, some comments. (5k)
+
+Technology
+ Code has certain MERC features (e.g. nanny). Low CPU usage, low memory usage
+ (716k). Otherwise standard C.
+
+
+benwhite@senet.com.au
+---------------------
+
+Features:
+ basic communication (global, local), no color, no administrative features. No
+ linkdead handling (dropping link quits the player), excellent tactical combat
+ system, some informational commands (who), no player customization, no online
+ building coding, comes with a 18-room world, great player documentation,
+ command abbreviation.
+
+Stability
+ All input truncated at 128 characters, unusual characters input
+ handled correctly. Otherwise no apparent bugs!
+
+Technology
+ Low CPU usage, low memory usage (480k), some comments in the code. Lacks
+ buffering however, sends one character at a time taking up many system
+ calls. C.
+
+Maintainability:
+ Several macros, tight on spaces but readable code. Decent amount of
+ comments. No design documentation. New spells could be fairly easily added. (10k)
+
+
+ari@lusis.org
+-------------
+
+Features:
+
+basic communication (local, emote), no color, some administrative features
+(can make other players admins, disconnect them, heal them, teleport around
+but no logging), no linkdead handling (dropping link quits the player but at
+least others see what happened), basic rooms with named exists, no objects, no
+NPCs, primitive manual combat (can hit others and cause damage but there is no
+delay on how often you can attack), good online room creation (create/destroy
+rooms, link them together and modify descriptions). Sparse
+documentation. Contains a rather large and relatively well-described world (6
+kilobytes of the source are used for this). No quit command, can only drop
+link. No persistence.
+
+Stability:
+
+Nothing obvious outright crashes the server. Input is not checked for length
+however and lines beyond 1024 bytes will overflow the input buffer. No
+checking of player names. Few quirks (e.g. you can see your own exit/leave
+messages).
+
+Maintainability:
+
+No comments in the source, no documentation describing the
+design/implementation. Regardless, the code is not too hard to follow. New
+rooms could be added by modifying the code and recompiling the server. (2k)
+
+Technology:
+
+C++, STL. Lots of fixed-size buffers rather than dynamically allocated ones
+(e.g. "char d[9999];" in the "Room" class). Low CPU usage, low (724k RSS)
+memory usage.
+
+
+
+blane@adoniystems.co.uk
+-----------------------
+
+Features: 
+
+basic communication (say, emote, shout), basic combat, aggressive and moving
+NPCs, basic objects (can be picked up, dropped, wielded and offered to the
+gods in the temple), no color, little administrative features (MUD can be
+shutdown but anyone can do it), no linkdead handling (characters losing link
+disappear and can seemingly even escape combat that way), basic rooms with
+standard compass exits as well as in and out (though these directions seem to
+be unused), persistent (players and their score as well as all existing NPCs
+and objects save) -- however only if they game is successfully shut down.
+
+Stability:
+
+Long input lines apparently interpreted as multiple commands. Crashed once
+with segmentation fault unexplainably in the middle of combat.
+
+
+Maintainability:
+
+Uses macros to save space, unfortunately in lowercase making code harder to
+read. Some comments. Since it's persistent (and even saves the rooms), it
+could probably be easily expanded with a full OLC. (3k)
+
+
+Technology:
+
+C++. 100% CPU usage, low memory usage (412k RSS)
+
+
+cryptic@spacemail.com
+---------------------
+
+Features:
+
+basic communication (local, global), rooms with number-based exists, no
+persistence, randomly-generated world, some online building (can change room
+titles / descriptions), no administrative features, no persistence,
+tea. Interesting time-based multi-player puzzle.
+
+Stability:
+
+No crashes. No major problems.
+
+
+Maintainability:
+
+No code documentation, sparse comments. Room names/descriptions can be
+changed.
+
+
+Technology:
+
+Plain C++. Low CPU usage, low memory usage (536k RSS).
+
+
+
+drveg@pacbell.net
+-----------------
+
+Features:
+
+primitive communication (say), no combat/NPCS/objects, minimal color (bold)
+no administrative functions, online building (create rooms, link them, edit
+description when creating a room), no linkdead handling (people in the room
+are notified when you quit though). Rooms created are persistent.
+
+Stability:
+
+No crashes were encountered. Sending large amount of data to the MUD then
+later dropping link seemed to trigger a strange error condition. Commands are
+in all-uppercase, everything which isn't a command is sent as a say to the
+room, which can be a bit embarrassing.
+
+
+Maintainability:
+
+No code documentation but lots of comments. ADA is also highly readable even
+for one not familiar with it.
+
+
+Technology:
+
+ADA, using a freely available socket library. Low memory usage (732k RSS), low
+CPU usage.
+
+
+icecube@ihug.co.nz
+------------------
+
+Features:
+
+primitive communication (say), some administrative functions (make admins),
+online coding (provides a bare LP-like system), mudftp, highly persistent
+
+Stability:
+
+No major problems.
+
+Maintainability:
+
+Lots of comments, but somewhat overeager text substitution to save
+space. Sparse high-level documentation considering the complexity of the system.
+
+Technology:
+
+Python. Complex OO framework, automatic persistence.
+
+
+
+brebionf@club-internet.fr
+-------------------------
+
+Features:
+
+basic communication (say), inert NPCs, full color, full-screen rogue-like
+map!, few non-working object, no administrative features, randomly generated
+world, no online creation, no linkdead handling, no persistence, no combat
+
+Stability:
+
+Multiple players can connect with the same name. One player dropping link
+caused the MUD to segfault.
+
+Maintainability:
+
+All functions have comments. There's lots of player documentation as well as a
+verbose description of design decisions and considerations available. (20k+)
+
+Technology:
+
+Python with a C module. Low CPU usage, medium memory usage (2200k
+RSS). Several compressed external data files.
+
+
+kaptaink@austin.rr.com 
+----------------------
+
+Features:
+
+Primitive communication (say), little administrative functions (shutdown),
+rooms with cardinal exits. No online coding/building, no linkdead handling.
+
+Written only in a few days just before the deadline, the code doesn't take
+full advantage of the 16k limit -- it's only 12312 bytes after spaces etc. are stripped.
+
+Stability:
+
+No problems observed. The network code is somewhat suboptimal (e.g. writes 0
+bytes to each socket at each pulse), throws away extra input if it received
+multiple lines in one read.
+
+Maintainability:
+
+Few comments, but a good amount of design documentation explaining the event
+system in-depth (11k)
+
+Technology:
+
+Python. Implements a interesting though bare-bones event system. Medium memory
+usage (1400k RSS)
+
+
+kavir@kavir.org
+-----------------
+
+Features:
+
+Basic combat, interesting stat system, excellent player documentation, basic
+communication commands (SAY, CHAT, EMOTE), basic information (WHO, SCORE,
+COMMANDS), basic administrative commands (SHUTDOWN), no linkdead handling,
+players are persistent. No rooms, objects.
+
+Stability:
+
+Network code ignores multiple lines in one packet.
+
+Maintainability:
+
+Uses modified Hungarian notation for naming variables. Well-formatted,
+extremely well-commented (though a bit over the top in places). Good
+documentation (24k)
+
+
+Technology:
+
+C.
+
+
+ksb@amber.org.uk
+----------------
+Features:
+
+medium world, with actual room descriptions. No player documentation. NPCs
+that can be fought. Rooms with the cardinal and diagonal exits. Basic combat
+system (KILL, CONSIDER, FLEE) XP gain and advancement possible. Primitive
+communication (SAY). No online building/coding.
+
+Stability:
+
+No problems found.
+
+Maintainability:
+
+Little documentation, almost no comments. Uses many two-letter macros, rather
+terse source code. Sometimes macros are not even semantically complete
+(e.g. a macro that expands to "sprintf(text,").
+
+Technology:
+
+C
+
+hanelyp@calweb.com
+------------------
+Features:
+
+Basic communication (SAY), sparse user documentation lists available commands,
+no admin commands, no OLC/OLB, rooms with named exits, persistent. Basic
+combat.
+
+Stability:
+
+Seemed unreliable, when multiple players connected commands such as GO started failing.
+
+Maintainability:
+
+Some comments. Basic documentation of the design.
+
+Technology:
+
+Perl. Very unusual yet interesting, file-based database system and
+multi-process design.
+
+
+mykael@vianet.net.au
+--------------------
+Features:
+
+Good documentation of features. Decent linkdead handling (can reconnect to
+existing characters). Good communication features (SAY, TELL, GOSSIP, EMOTE,
+user-creatable souls (socials)). Rooms have arbitrarily named exits. Online
+creation of rooms, objects. Objects that can be picked up (and entered!). Fully
+persistent (thanks to Java).
+
+Stability:
+
+There were problems saving the world (an exception was thrown). This is
+possibly due to me using a different version of the 1.2 JRE than the author.
+
+Maintainability:
+
+Good expansion possibilities (new rooms, objects, socials), decent amount of
+comments, clear code.
+
+Technology: Java. Large memory usage(4400k RSS, because of JRE), low CPU
+usage.
+
+
+quzah@hotmail.com
+-----------------
+Features:
+
+primitive communication (SAY only), basic information (WHO), basic
+administration (SHUTDOWN, available to anyone). No player documentation.
+
+Stability:
+
+Newlines are not stripped when the string inputted is given to the SAY
+command, resulting in strange output.
+
+Maintainability:
+
+Extreme usage of macros. On the other hand, decently commented. No design
+documentation.
+
+Technology:
+
+C. Uses 100% CPU time, unless compiled with -DNAPZ (which seems to be
+undocumented).
+
+
+telford@triode.net.au
+---------------------
+
+Features:
+
+true outdoors (not room based!) with landmarks and overhead mapping,
+auto-generated world, dynamically generated descriptions, decent communication
+(SAY, SHOUT, EMOTE), primitive combat, some administrative commands restricted
+to one account, online building (not working in the usual way because there
+are no rooms) sufficient player documentation, good informational commands
+(WHO, FACE/ENTRY can change your room description/who information), player
+passwords, world and players are persistent.
+
+Stability: No problems observed.
+
+Maintainability: Good design documentation, large amounts of comments. Some
+usage of macros
+
+Technology:
+
+C. Creates a large database file the the world. Small memory usage (892k RSS),
+low CPU usage (after the first boot where a world is auto-generated).
+
+
+xholan@abandoned.org
+--------------------
+Features:
+
+Tradewars-like space exploration!, space combat featuring torpedoes, mines,
+trading system. Decent player documentation. Auto-generated
+universe. Color. Primitive communication (RADIO -- global channel)
+
+Stability: Throws away multiple input lines sent in one packet. 
+
+Maintainability: No design documentation, sparse comments. Still, code is readable.
+
+Technology: Python.
+
+Other notes:
+
+Interesting idea and execution, but lacks play balance.
+
+
+zac@intertex.net
+----------------
+Features:
+
+basic communication (EMOTE, SAY, TELL). Rooms, but no exits. There seems to be
+a lot of functionality that is planned, or half-implemented and commented out.
+
+Stability:
+
+Somewhat unstable, e.g. SAY and GOTO cause an uncaught exception.
+Logging in as an already existing user after restarting causes crash.
+
+Maintainability: Sparsely commented. Short variable/function names.
+
+Technology: Python.
+
